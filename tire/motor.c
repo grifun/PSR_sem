@@ -56,9 +56,13 @@
 #define GPIO_INT_ANY      REGISTER(ZYNQ7K_GPIO_BASE, 0x000002a4)
 
 // FPGA register definition
+#define MOTOR_CR REGISTER(MOTOR_BASE, 0x0)
 #define MOTOR_SR REGISTER(MOTOR_BASE, 0x4)
 #define MOTOR_SR_IRC_A_MON 8
 #define MOTOR_SR_IRC_B_MON 9
+
+#define PWM_PERIOD REGISTER(MOTOR_BASE, 0x8)
+#define PWM_CONTROL REGISTER(MOTOR_BASE, 0xC)
 
 
 volatile unsigned irq_count;
@@ -93,14 +97,6 @@ void irc_cleanup(void)
         intDisconnect(INUM_TO_IVEC(INT_LVL_GPIO), irc_isr, 0);
 }
 
-#include "motor.h"
-
-void IRC_reset() {
-    MOTOR_CONTROL |= 0x00f0;
-}
-
-
-
 /*
  * Entry point for DKM.
  */
@@ -119,5 +115,6 @@ void motor()
 }
 
 void rotate(int speed, char direction) {
-    
+    PWM_PERIOD = 50000;
+    PWM_CONTROL = 0xE000;
 }

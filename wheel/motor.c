@@ -93,14 +93,6 @@ void irc_cleanup(void)
         intDisconnect(INUM_TO_IVEC(INT_LVL_GPIO), irc_isr, 0);
 }
 
-#include "motor.h"
-
-void IRC_reset() {
-    MOTOR_CONTROL |= 0x00f0;
-}
-
-
-
 /*
  * Entry point for DKM.
  */
@@ -116,8 +108,4 @@ void motor()
         }
 
         irc_cleanup();
-}
-
-void rotate(int speed, char direction) {
-    
 }
