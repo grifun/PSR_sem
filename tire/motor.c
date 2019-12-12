@@ -64,6 +64,12 @@
 #define PWM_PERIOD REGISTER(MOTOR_BASE, 0x8)
 #define PWM_CONTROL REGISTER(MOTOR_BASE, 0xC)
 
+#define LEFT 2
+#define RIGHT 1
+#define MIN_DUTY 0xB0
+#define MAX_DUTY 0x4000
+#define BASE_DUTY 0xB0
+
 
 volatile unsigned irq_count;
 
@@ -76,8 +82,7 @@ void motorWatcher(void)
         GPIO_INT_STATUS = MOTOR_IRQ_PIN; /* clear the interrupt */
 }
 
-void motorInit(void)
-{
+void motorWatcherInit() {
         GPIO_INT_STATUS = MOTOR_IRQ_PIN; /* reset status */
         GPIO_DIRM = 0x0;                 /* set as input */
         GPIO_INT_TYPE = MOTOR_IRQ_PIN;   /* interrupt on edge */
@@ -89,8 +94,12 @@ void motorInit(void)
         intEnable(INT_LVL_GPIO);         /* enable all GPIO interrupts */
 }
 
-void irc_cleanup(void)
-{
+void motorInit() {
+        MOTOR_CR = 0b1000000;
+	PWM_PERIOD = 5000;
+}
+
+void watcherCleanup(void){
         GPIO_INT_DISABLE = MOTOR_IRQ_PIN;
 
         intDisable(INT_LVL_GPIO);
@@ -114,7 +123,20 @@ void motor()
         irc_cleanup();
 }
 
-void rotate(int speed, char direction) {
-    PWM_PERIOD = 50000;
-    PWM_CONTROL = 0xE000;
+void rotate(unsigned speed, char direction) {
+	/* optimal fast boi
+	MOTOR_CR = 0b1000000; set manual control
+        PWM_PERIOD = 50000; perioda v 10ns
+        PWM_CONTROL = 0xA0000000; prvni 2 bity vlevo smer, ostatni byty percentage
+        */
+	//PWM_PERIOD = 50000;
+	if( (direction != LEFT) && (direction != RIGHT) ) {
+		return;
+	}
+	if( (speed < 0) || (speed > 100) ) {
+		return;
+	}
+	//printf("nastavuju %x\n", (direction << 30) | (BASE_DUTY * speed));
+	PWM_CONTROL = (direction << 30) | (BASE_DUTY * speed);
+	
 }
