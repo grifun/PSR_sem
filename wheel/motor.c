@@ -1,11 +1,18 @@
+
+
 #include <taskLib.h>
 #include <stdio.h>
 #include <kernelLib.h>
 #include <semLib.h>
 #include <intLib.h>
 #include <iv.h>
+#include <stdbool.h>
+#include <unistd.h>
+
 
 #include <xlnx_zynq7k.h>
+
+#include "motor.h"
 
 #define REGISTER(base, offs) (*((volatile UINT32 *)((base) + (offs))))
 #define BIT(i) ((1) << (i))
@@ -71,15 +78,42 @@
 #define BASE_DUTY 0xB0
 
 
-volatile unsigned irq_count;
 
-void motorWatcher(void)
-{
-        bool a = (MOTOR_SR & BIT(MOTOR_SR_IRC_A_MON)) != 0;
-        bool b = (MOTOR_SR & BIT(MOTOR_SR_IRC_B_MON)) != 0;
-        // ...
-        printf("a, b = %d, %d \n", a, b);
-        fflush(stdout);
+void motorWatcher() {
+        a = (MOTOR_SR & BIT(MOTOR_SR_IRC_A_MON)) != 0;
+        b = (MOTOR_SR & BIT(MOTOR_SR_IRC_B_MON)) != 0;
+
+        if(a == prev_a) {
+        	if(a == 1){
+        		if(b == 1){
+        			position++;
+        		} else{
+        			position--;
+        		}
+        	} else{
+        		if(b == 0){
+        			position++;
+        		} else{
+        			position--;
+        		}
+        	}
+        }else{
+        	if(b == 1){
+				if(a == 0){
+					position++;
+				} else{
+					position--;
+				}
+			} else{
+				if(a == 1){
+					position++;
+				} else{
+					position--;
+				}
+			}
+        }
+        prev_a = a;
+        prev_b = b;
         irq_count++;
         GPIO_INT_STATUS = MOTOR_IRQ_PIN; /* clear the interrupt */
 }
@@ -92,29 +126,13 @@ void motorWatcherInit() {
         GPIO_INT_ANY = 0x0;              /* ignore falling edge */
         GPIO_INT_ENABLE = MOTOR_IRQ_PIN; /* enable interrupt on MOTOR_IRQ pin */
 
-        intConnect(INUM_TO_IVEC(INT_LVL_GPIO), irc_isr, 0);
+        intConnect(INUM_TO_IVEC(INT_LVL_GPIO), motorWatcher, 0);
         intEnable(INT_LVL_GPIO);         /* enable all GPIO interrupts */
 }
 
-void watcherCleanup(void){
+void motorWatcherCleanup() {
         GPIO_INT_DISABLE = MOTOR_IRQ_PIN;
 
         intDisable(INT_LVL_GPIO);
-        intDisconnect(INUM_TO_IVEC(INT_LVL_GPIO), irc_isr, 0);
-}
-
-/*
- * Entry point for DKM.
- */
-void motor()
-{
-        TASK_ID st;
-
-        motorWatcherInit();
-        while (1) {
-            printf("IRQ count: %u\n", irq_count);
-            sleep(1);
-        }
-
-        irc_cleanup();
+        intDisconnect(INUM_TO_IVEC(INT_LVL_GPIO), motorWatcher, 0);
 }
