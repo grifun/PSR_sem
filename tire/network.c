@@ -5,15 +5,16 @@
 #include <stdio.h>
 #include <sockLib.h>
 #include <string.h>
+#include "network.h"
 
-#define SERVER_PORT     80 /* Port 80 is reserved for HTTP protocol */
-#define SERVER_MAX_CONNECTIONS  20
-#define MANAGEMENT_PORT 42420
+int FINISHED = 0;
+struct sockaddr_in serverAddr,src;
+int sockd;
+int yes = 1;
 void www()
 {
   int s;
   int newFd;
-  struct sockaddr_in serverAddr;
   struct sockaddr_in clientAddr;
   int sockAddrSize;
 
@@ -23,7 +24,7 @@ void www()
   serverAddr.sin_port = htons(SERVER_PORT);
   serverAddr.sin_addr.s_addr = htonl(INADDR_ANY);
   
-  inet_pton(AF_INET, "192.168.202.242", &serverAddr->sin_addr); //???
+ // inet_pton(AF_INET, "192.168.202.242", &serverAddr->sin_addr); //???
   
   s=socket(AF_INET, SOCK_STREAM, 0);
   if (s<0)
@@ -76,23 +77,23 @@ void www()
   }
 }
 
-void serve(int fd) {
+/*void serve(int fd) {
     FILE *tunnel = fdopen(fd, "w");
     fprintf(tunnel, "HTTP/1.0 200 OK\r\n\r\n");
     fprintf(tunnel, "Current time is %ld.\n", time(NULL));
-
-    /*load html file*/
+    int chr;
+   // load html file
     FILE *source = fopen(WEBPAGE, "r");
     if(source == NULL){
         perror("incorrect html source");
     }
-    /*send all his contents*/
+   // send all his contents
     while( (chr = fgetc(source) ) != EOF)
         fputc(chr, tunnel);
     
-    fclose(source)
-    fclose(f);
-}
+    fclose(source);
+    fclose(tunnel);
+}*/
 
 void connectionListenerInit() {
   int sockd;
@@ -104,8 +105,7 @@ void connectionListenerInit() {
   serverAddr.sin_family = AF_INET;
   serverAddr.sin_port = htons(MANAGEMENT_PORT);
   serverAddr.sin_addr.s_addr = htonl(INADDR_ANY);
-
-  inet_pton(AF_INET, "192.168.202.242", &serverAddr->sin_addr); //???
+  //inet_pton(AF_INET, "192.168.202.242", &serverAddr->sin_addr); //???
 
   sockd = socket(AF_INET, SOCK_DGRAM, 0);
   if(sockd == -1) {
@@ -144,6 +144,7 @@ void connectionListener(){
     uint32_t srclen=sizeof(src);
     buf[MAX_BUF-1] = 0;
     printf("in answererTask\n");
+    ssize_t status;
     while(!FINISHED){
         status = recvfrom(sockd,buf,MAX_BUF,0,(struct sockaddr*)&src,&srclen);
         if(status < 0){
