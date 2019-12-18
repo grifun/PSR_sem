@@ -56,9 +56,19 @@
 #define GPIO_INT_ANY      REGISTER(ZYNQ7K_GPIO_BASE, 0x000002a4)
 
 // FPGA register definition
+#define MOTOR_CR REGISTER(MOTOR_BASE, 0x0)
 #define MOTOR_SR REGISTER(MOTOR_BASE, 0x4)
 #define MOTOR_SR_IRC_A_MON 8
 #define MOTOR_SR_IRC_B_MON 9
+
+#define PWM_PERIOD REGISTER(MOTOR_BASE, 0x8)
+#define PWM_CONTROL REGISTER(MOTOR_BASE, 0xC)
+
+#define LEFT 2
+#define RIGHT 1
+#define MIN_DUTY 0xB0
+#define MAX_DUTY 0x4000
+#define BASE_DUTY 0xB0
 
 
 volatile unsigned irq_count;
@@ -68,12 +78,13 @@ void motorWatcher(void)
         bool a = (MOTOR_SR & BIT(MOTOR_SR_IRC_A_MON)) != 0;
         bool b = (MOTOR_SR & BIT(MOTOR_SR_IRC_B_MON)) != 0;
         // ...
+        printf("a, b = %d, %d \n", a, b);
+        fflush(stdout);
         irq_count++;
         GPIO_INT_STATUS = MOTOR_IRQ_PIN; /* clear the interrupt */
 }
 
-void motorInit(void)
-{
+void motorWatcherInit() {
         GPIO_INT_STATUS = MOTOR_IRQ_PIN; /* reset status */
         GPIO_DIRM = 0x0;                 /* set as input */
         GPIO_INT_TYPE = MOTOR_IRQ_PIN;   /* interrupt on edge */
@@ -85,8 +96,7 @@ void motorInit(void)
         intEnable(INT_LVL_GPIO);         /* enable all GPIO interrupts */
 }
 
-void irc_cleanup(void)
-{
+void watcherCleanup(void){
         GPIO_INT_DISABLE = MOTOR_IRQ_PIN;
 
         intDisable(INT_LVL_GPIO);
@@ -100,8 +110,7 @@ void motor()
 {
         TASK_ID st;
 
-        motorInit();
-
+        motorWatcherInit();
         while (1) {
             printf("IRQ count: %u\n", irq_count);
             sleep(1);
