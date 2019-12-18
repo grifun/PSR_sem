@@ -1,19 +1,16 @@
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <netdb.h>
-#include <stdio.h>
-#include <sockLib.h>
-#include <string.h>
+#include "network.h"
 
-#define SERVER_PORT     80 /* Port 80 is reserved for HTTP protocol */
-#define SERVER_MAX_CONNECTIONS  20
-#define MANAGEMENT_PORT 42420
+int FINISHED = 0;
+struct sockaddr_in serverAddr,src,mngAddr;
+struct sockaddr_in my_addr;//my adress
+int sockd;
+struct timeval tval;
+int yes = 1;
+char ip[15] = "192.168.202.242";
 void www()
 {
   int s;
   int newFd;
-  struct sockaddr_in serverAddr;
   struct sockaddr_in clientAddr;
   int sockAddrSize;
 
@@ -22,8 +19,7 @@ void www()
   serverAddr.sin_family = AF_INET;
   serverAddr.sin_port = htons(SERVER_PORT);
   serverAddr.sin_addr.s_addr = htonl(INADDR_ANY);
-  
-  inet_pton(AF_INET, "192.168.202.242", &serverAddr->sin_addr); //???
+  inet_pton(AF_INET,ip, &serverAddr);
   
   s=socket(AF_INET, SOCK_STREAM, 0);
   if (s<0)
@@ -34,7 +30,7 @@ void www()
 
   if (setsockopt(sockd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(yes)) == -1) {
       printf("failed to set reuse\n");
-      exit(1);
+      return;
   }
 
   if (bind(s, (struct sockaddr *) &serverAddr, sockAddrSize) == ERROR)
@@ -80,77 +76,86 @@ void serve(int fd) {
     FILE *tunnel = fdopen(fd, "w");
     fprintf(tunnel, "HTTP/1.0 200 OK\r\n\r\n");
     fprintf(tunnel, "Current time is %ld.\n", time(NULL));
-
-    /*load html file*/
+    int chr;
+   // load html file
     FILE *source = fopen(WEBPAGE, "r");
     if(source == NULL){
         perror("incorrect html source");
     }
-    /*send all his contents*/
+   // send all his contents
     while( (chr = fgetc(source) ) != EOF)
         fputc(chr, tunnel);
     
-    fclose(source)
-    fclose(f);
+    fclose(source);
+    fclose(tunnel);
 }
 
-void connectionListenerInit() {
-  int sockd;
-  struct sockaddr_in mngAddr;
-  int sockAddrSize;
+//TODO somehow finish this function
+void changeIP() {
+	 struct ifreq ifr;
+	    const char * name = "eth1";
+	    int fd = socket(PF_INET, SOCK_DGRAM, IPPROTO_IP);
 
-  sockAddrSize = sizeof(struct sockaddr_in);
-  bzero((char *) &serverAddr, sizeof(struct sockaddr_in));
-  serverAddr.sin_family = AF_INET;
-  serverAddr.sin_port = htons(MANAGEMENT_PORT);
-  serverAddr.sin_addr.s_addr = htonl(INADDR_ANY);
+	    strncpy(ifr.ifr_name, name, IFNAMSIZ);
 
-  inet_pton(AF_INET, "192.168.202.242", &serverAddr->sin_addr); //???
+	    ifr.ifr_addr.sa_family = AF_INET;
+	    inet_pton(AF_INET, "10.12.0.1", ifr.ifr_addr.sa_data + 2);
+	    ioctl(fd, SIOCSIFADDR, &ifr);
 
-  sockd = socket(AF_INET, SOCK_DGRAM, 0);
-  if(sockd == -1) {
-      printf("Socket creation error\n");
-      FINISHED = 1;
-      return;
-  }
+	    inet_pton(AF_INET, "255.255.0.0", ifr.ifr_addr.sa_data + 2);
+	    ioctl(fd, SIOCSIFNETMASK, &ifr);
 
-  if ((sockd = socket(AF_INET, SOCK_DGRAM, 0)) == -1) {
-      perror("Socket creation error");
-      exit(1);
-  }
+	    ioctl(fd, SIOCGIFFLAGS, &ifr);
+	    strncpy(ifr.ifr_name, name, IFNAMSIZ);
+	    ifr.ifr_flags |= (IFF_UP | IFF_RUNNING);
 
-  if (setsockopt(sockd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(yes)) == -1) {
-      printf("failed to set reuse\n");
-      exit(1);
-  }
-
-  struct timeval tval;
-  tval.tv_usec = 1000000;
-  if (setsockopt(sockd, SOL_SOCKET, SO_RCVTIMEO,&tval,sizeof(tval)) < 0) {
-      printf("failed to set timeout\n");
-  }
-    
-  if (bind(sockd, (struct sockaddr *)&src, sizeof(src)) == -1) {
-      printf("failed to bind socket \n");
-      exit(1);
-  }
+	    ioctl(fd, SIOCSIFFLAGS, &ifr);
 
   //task spawn connectionListener
 }
+void initreceive(){
+	
+	    if ((sockd = socket(AF_INET, SOCK_DGRAM, 0)) == -1) {
+	        printf("Socket creation error\n");
+	        return;
+	    }
+	    memset(&my_addr, 0, sizeof(my_addr));
+	    my_addr.sin_family = AF_INET;
+	    my_addr.sin_addr.s_addr = INADDR_ANY;
+	    my_addr.sin_port = htons(MANAGEMENT_PORT);
+	    memset(&(my_addr.sin_zero), '\0', 8);
+	    int yes=1; 
+	    if (setsockopt(sockd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(yes)) == -1) {
+	        printf("failed to set reuse\n");
+	        return;
+	    }
+	    tval.tv_usec = 1000000;
+	    if (setsockopt(sockd, SOL_SOCKET, SO_RCVTIMEO,&tval,sizeof(tval)) < 0) {
+	        printf("failed to set timeout\n");
+	        return;
+	    }
+
+	    if (bind(sockd, (struct sockaddr *)&my_addr, sizeof(my_addr)) == -1) {
+	        printf("failed to bind socket \n");
+	        return;
+
+ }
+}
 
 void connectionListener(){
-    int i;
     char buf[2000];
-    uint32_t srclen=sizeof(src);
+    s = socket(AF_INET, SOCK_DGRAM, 0);
+    socklen_t srclen=sizeof(src);
     buf[MAX_BUF-1] = 0;
     printf("in answererTask\n");
+    ssize_t status;
     while(!FINISHED){
-        status = recvfrom(sockd,buf,MAX_BUF,0,(struct sockaddr*)&src,&srclen);
+        status = recvfrom(s,buf,MAX_BUF,0,(struct sockaddr*)&src,&srclen);
         if(status < 0){
-            printf("ERROR: %s\n", strerror(errno));
+            //printf("ERROR: %s\n", strerror(errno));
             continue;
         }
-        if (buf[0] == 'O' && buf[1] == 'W' && buf[2] == 'N') {
+        if (buf[0] == 'P' && buf[1] == 'W' && buf[2] == 'N' && buf[3] == 'S' && buf[4] == 'T' && buf[5] == 'N') {
             //TODO musime to poslat do PIDčka
             printf("mame OWN! packen \n");
         }
