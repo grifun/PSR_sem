@@ -25,9 +25,10 @@ void sender() {
 	}
 }
 
-int main() {
+
+int main(int argc, char[][] argv) {
 	motorWatcherInit();
-	networkInit();
+	networkInit(argv[1]);
 	sender();
     
     motorWatcherCleanup()

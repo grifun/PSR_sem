@@ -7,7 +7,6 @@
 
 #include "network.h"
 
-#define TARGET_IP "192.168.202.242"
 #define MANAGEMENT_PORT 42420
 
 struct sockaddr_in my_addr, target_addr;
@@ -15,7 +14,7 @@ int sockd, addrlen;
 struct timeval tval;
 char buffer[11];
 
-void networkInit(){
+void networkInit(char* ip){
     tval.tv_sec = 0;
     tval.tv_usec = 1000000;
 
@@ -26,7 +25,7 @@ void networkInit(){
 
     memset(&target_addr, 0, sizeof(target_addr));
     target_addr.sin_family = AF_INET;
-    target_addr.sin_addr.s_addr = inet_addr(TARGET_IP);
+    target_addr.sin_addr.s_addr = inet_addr(ip);
     target_addr.sin_port = htons(MANAGEMENT_PORT);
 
     memset(&my_addr, 0, sizeof(my_addr));
