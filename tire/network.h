@@ -14,9 +14,6 @@
 #define SERVER_MAX_CONNECTIONS  20
 #define MANAGEMENT_PORT 42420
 #define WEBPAGE "webpage.html"
-#define MAX_BUF 2000
-#define IFNAME "eth0:2"
-#define HOST "192.168.1.204"
 #define ifreq_offsetof(x)  offsetof(struct ifreq, x)
 void www();
 void serve(int fd);

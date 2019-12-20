@@ -99,8 +99,10 @@ void rotate(unsigned speed, char direction) {
 	PWM_CONTROL = (direction << 30) | (BASE_DUTY * speed);
 }
 
-void PID(int desiredPosition) {
-        int speed = abs(desiredPosition - position) / 512;
-        char direction = sign(desiredPosition - position);
-        rotate(speed, direction);
+void PID() {
+        while(1) {
+                int speed = abs(desiredPosition - position) / 512;
+                char direction = sign(desiredPosition - position);
+                rotate(speed, direction);
+        }
 }

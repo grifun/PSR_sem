@@ -6,8 +6,7 @@
 #include <intLib.h>
 #include <iv.h>
 #include <math.h>
-#include <string.h>
- 
+
 #include <xlnx_zynq7k.h>
 
 #define REGISTER(base, offs) (*((volatile UINT32 *)((base) + (offs))))
@@ -75,7 +74,7 @@
 
 
 volatile char a, b, prev_a, prev_b;
-volatile int position;
+volatile int position, desiredPosition;
 
 
 void motorWatcher(void);
@@ -84,4 +83,4 @@ void motorInit();
 void watcherCleanup(void);
 void motor();
 void rotate(unsigned speed, char direction);
-void PID(int desiredPosition);
+void PID();

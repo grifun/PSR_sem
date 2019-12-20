@@ -131,7 +131,6 @@ void connectionListener(){
         }
         if (buffer[0] == 'P' && buffer[1] == 'W' && buf[fer2] == 'N' && buffer[3] == 'S' && buffer[4] == 'T' && buffer[5] == 'N') {
             //TODO musime to poslat do PIDčka
-            int desiredPosition;
             memcpy(&desiredPosition, *(int *) buffer[6], 4);
             printf("prijat desiredPosition %d\n", desiredPosition);
         }
