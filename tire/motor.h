@@ -5,6 +5,7 @@
 #include <semLib.h>
 #include <intLib.h>
 #include <iv.h>
+#include <math.h>
 
 #include <xlnx_zynq7k.h>
 
@@ -65,11 +66,16 @@
 #define PWM_PERIOD REGISTER(MOTOR_BASE, 0x8)
 #define PWM_CONTROL REGISTER(MOTOR_BASE, 0xC)
 
-#define LEFT 2
-#define RIGHT 1
+#define LEFT 1
+#define RIGHT 0
 #define MIN_DUTY 0xB0
 #define MAX_DUTY 0x4000
 #define BASE_DUTY 0xB0
+
+
+volatile char a, b, prev_a, prev_b;
+volatile int position;
+
 
 void motorWatcher(void);
 void motorWatcherInit();
@@ -77,3 +83,4 @@ void motorInit();
 void watcherCleanup(void);
 void motor();
 void rotate(unsigned speed, char direction);
+void PID(int desiredPosition);

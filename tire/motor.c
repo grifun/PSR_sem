@@ -1,13 +1,42 @@
 #include "motor.h"
 
-
 volatile unsigned irq_count;
 
-void motorWatcher(void)
-{
-        unsigned int a = (MOTOR_SR & BIT(MOTOR_SR_IRC_A_MON)) != 0;
-        unsigned int b = (MOTOR_SR & BIT(MOTOR_SR_IRC_B_MON)) != 0;
-        // ...
+void motorWatcher() {
+        a = (MOTOR_SR & BIT(MOTOR_SR_IRC_A_MON)) != 0;
+        b = (MOTOR_SR & BIT(MOTOR_SR_IRC_B_MON)) != 0;
+
+        if(a == prev_a) {
+        	if(a == 1){
+        		if(b == 1){
+        			position++;
+        		} else{
+        			position--;
+        		}
+        	} else{
+        		if(b == 0){
+        			position++;
+        		} else{
+        			position--;
+        		}
+        	}
+        }else{
+        	if(b == 1){
+				if(a == 0){
+					position++;
+				} else{
+					position--;
+				}
+			} else{
+				if(a == 1){
+					position++;
+				} else{
+					position--;
+				}
+			}
+        }
+        prev_a = a;
+        prev_b = b;
         irq_count++;
         GPIO_INT_STATUS = MOTOR_IRQ_PIN; /* clear the interrupt */
 }
@@ -68,5 +97,10 @@ void rotate(unsigned speed, char direction) {
 	}
 	//printf("nastavuju %x\n", (direction << 30) | (BASE_DUTY * speed));
 	PWM_CONTROL = (direction << 30) | (BASE_DUTY * speed);
-	
+}
+
+void PID(int desiredPosition) {
+        int speed = abs(desiredPosition - position) / 512;
+        char direction = sign(desiredPosition - position);
+        rotate(speed, direction);
 }
