@@ -11,7 +11,6 @@
 int main(){
 	//www();
 	//motorWatcherInit();
-	changeIP();
 	initreceive();
 	//connectionListenerInit();
 	int listener = taskSpawn("listener", PRIORITY, 0, 4096, (FUNCPTR)connectionListener, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);

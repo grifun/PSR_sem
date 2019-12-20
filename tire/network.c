@@ -6,7 +6,6 @@ struct sockaddr_in my_addr;//my adress
 int sockd;
 struct timeval tval;
 int yes = 1;
-char ip[15] = "192.168.202.242";
 void www()
 {
   int s;
@@ -90,31 +89,7 @@ void serve(int fd) {
     fclose(tunnel);
 }
 
-//TODO somehow finish this function
-void changeIP() {
-	 struct ifreq ifr;
-	    const char * name = "eth1";
-	    int fd = socket(PF_INET, SOCK_DGRAM, IPPROTO_IP);
-
-	    strncpy(ifr.ifr_name, name, IFNAMSIZ);
-
-	    ifr.ifr_addr.sa_family = AF_INET;
-	    inet_pton(AF_INET, "10.12.0.1", ifr.ifr_addr.sa_data + 2);
-	    ioctl(fd, SIOCSIFADDR, &ifr);
-
-	    inet_pton(AF_INET, "255.255.0.0", ifr.ifr_addr.sa_data + 2);
-	    ioctl(fd, SIOCSIFNETMASK, &ifr);
-
-	    ioctl(fd, SIOCGIFFLAGS, &ifr);
-	    strncpy(ifr.ifr_name, name, IFNAMSIZ);
-	    ifr.ifr_flags |= (IFF_UP | IFF_RUNNING);
-
-	    ioctl(fd, SIOCSIFFLAGS, &ifr);
-
-  //task spawn connectionListener
-}
 void initreceive(){
-	
 	    if ((sockd = socket(AF_INET, SOCK_DGRAM, 0)) == -1) {
 	        printf("Socket creation error\n");
 	        return;
@@ -138,7 +113,6 @@ void initreceive(){
 	    if (bind(sockd, (struct sockaddr *)&my_addr, sizeof(my_addr)) == -1) {
 	        printf("failed to bind socket \n");
 	        return;
-
  }
 }
 

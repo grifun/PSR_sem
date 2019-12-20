@@ -22,4 +22,3 @@ void serve(int fd);
 void connectionListenerInit();
 void connectionListener();
 void initreceive();
-void changeIP();
