@@ -6,7 +6,8 @@
 #include <intLib.h>
 #include <iv.h>
 #include <math.h>
-
+#include <string.h>
+ 
 #include <xlnx_zynq7k.h>
 
 #define REGISTER(base, offs) (*((volatile UINT32 *)((base) + (offs))))

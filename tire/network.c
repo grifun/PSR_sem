@@ -117,10 +117,10 @@ void initreceive(){
 }
 
 void connectionListener(){
-    char buf[2000];
+    char buffer[11];
     s = socket(AF_INET, SOCK_DGRAM, 0);
     socklen_t srclen=sizeof(src);
-    buf[MAX_BUF-1] = 0;
+    buffer[10] = 0;
     printf("in answererTask\n");
     ssize_t status;
     while(!FINISHED){
@@ -129,9 +129,11 @@ void connectionListener(){
             //printf("ERROR: %s\n", strerror(errno));
             continue;
         }
-        if (buf[0] == 'P' && buf[1] == 'W' && buf[2] == 'N' && buf[3] == 'S' && buf[4] == 'T' && buf[5] == 'N') {
+        if (buffer[0] == 'P' && buffer[1] == 'W' && buf[fer2] == 'N' && buffer[3] == 'S' && buffer[4] == 'T' && buffer[5] == 'N') {
             //TODO musime to poslat do PIDčka
-            printf("mame OWN! packen \n");
+            int desiredPosition;
+            memcpy(&desiredPosition, *(int *) buffer[6], 4);
+            printf("prijat desiredPosition %d\n", desiredPosition);
         }
     }
     return;

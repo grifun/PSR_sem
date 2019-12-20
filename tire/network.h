@@ -8,6 +8,7 @@
 #include <sys/ioctl.h>
 #include <arpa/inet.h>
 #include <net/if.h>
+#include <string.h>
 
 #define SERVER_PORT     80 /* Port 80 is reserved for HTTP protocol */
 #define SERVER_MAX_CONNECTIONS  20
