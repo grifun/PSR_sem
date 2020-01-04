@@ -13,7 +13,7 @@
 
 #define WEBPAGE "webpage.html"
 #define SERVER_PORT     20000 /* Port 80 is reserved for HTTP protocol */
-#define SERVER_MAX_CONNECTIONS  20000
+#define SERVER_MAX_CONNECTIONS  20
 
 int FINISHED = 0;
 struct sockaddr_in serverAddr,src,mngAddr;
@@ -36,7 +36,7 @@ void serve(int fd) {
         perror("incorrect html source");
     }
    // send all his contents
-    while( (chr = fgetc(source) ) != EOF)
+    while( (chr = fgetc(source) ) != EOF) {
         switch(chr) {
           case '&':
             fputc('\n',tunnel);
@@ -51,22 +51,8 @@ void serve(int fd) {
           default:
             fputc(chr, tunnel);
         }
-      fclose(source);
-    
-    /*
-    fprintf(tunnel, 
-    "<html>\
-    <head>\
-      <title style='background-color: yellow;'>Motion Control</title>\
-    </head>\
-    <body onload='setTimeout(function(){location.reload()}, 1000);'\
-          style='background-color: yellowgreen;'>>\
-      <script>document.write(Date.now());</script>\
-      <h1>Motion control</h1>\
-    </body>\
-    <footer>Created by Tomas Kasl and Zdenek Syrovy</footer>\
-    </html>");
-    */
+    }
+    fclose(source);
     fclose(tunnel);
 }
 

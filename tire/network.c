@@ -1,5 +1,13 @@
 #include "network.h"
 
+short PosHistory[2000];
+short PosHistorySWAP[2000];
+short DesPosHistory[2000];
+short DesPosHistorySWAP[2000];
+short PWMHistory[2000];
+short PWMHistorySWAP[2000];
+short timemark = 0;
+
 int FINISHED = 0;
 struct sockaddr_in serverAddr,src,mngAddr;
 struct sockaddr_in my_addr;//my adress
@@ -28,18 +36,18 @@ void www()
     return;
   }
 
-  if (setsockopt(sockd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(yes)) == -1) {
+  if (setsockopt(s, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(yes)) == -1) {
       printf("failed to set reuse\n");
       return;
   }
 
-  if (bind(s, (struct sockaddr *) &serverAddr, sockAddrSize) == ERROR)
+  if (bind(s, (struct sockaddr *) &serverAddr, sockAddrSize) == -1)
   {
     printf("Error: www: bind\n");
     return;
   }
 
-  if (listen(s, SERVER_MAX_CONNECTIONS) == ERROR)
+  if (listen(s, SERVER_MAX_CONNECTIONS) == <0)
   {
     perror("www listen");
     close(s);
@@ -57,7 +65,7 @@ void www()
       close(s);
       return;
     }
-
+    
     /* The client connected from IP address inet_ntoa(clientAddr.sin_addr)
        and port ntohs(clientAddr.sin_port).
 
@@ -65,27 +73,43 @@ void www()
        and sends back the response.
 
        Don't forget to close newFd at the end */
-    
-    //task create serve
-
-
-  }
+    int service = taskSpawn("service", PRIORITY+2, 0, 4096, (FUNCPTR)serve, newFd, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    }
 }
 
 void serve(int fd) {
     FILE *tunnel = fdopen(fd, "w");
     fprintf(tunnel, "HTTP/1.0 200 OK\r\n\r\n");
-    fprintf(tunnel, "Current time is %ld.\n", time(NULL));
+    //fprintf(tunnel, "Current time is %ld.\n");
     int chr;
    // load html file
+    
     FILE *source = fopen(WEBPAGE, "r");
     if(source == NULL){
         perror("incorrect html source");
     }
    // send all his contents
-    while( (chr = fgetc(source) ) != EOF)
-        fputc(chr, tunnel);
-    
+    while( (chr = fgetc(source) ) != EOF) {
+        switch(chr) {
+          case '&':
+            fputc('\n',tunnel);
+            for(int i=0; i<timemark; i++) {
+                fprintf(tunnel, "{x: %d, y: %d},",i, PosHistory[i]);
+            } break;
+          case '@':
+            fputc('\n',tunnel);
+            for(int i=0; i<timemark; i++) {
+                fprintf(tunnel, "{x: %d, y: %d},",i, DesPosHistory[i]);
+            } break;
+          case '$':
+            fputc('\n',tunnel);
+            for(int i=0; i<timemark; i++) {
+                fprintf(tunnel, "{x: %d, y: %d},",i, PWMHistory[i]);
+            } break;
+          default:
+            fputc(chr, tunnel);
+        }
+    }
     fclose(source);
     fclose(tunnel);
 }
@@ -134,6 +158,29 @@ void connectionListener(){
             //TODO musime to poslat do PIDčka
             memcpy(&desiredPosition, *(int *) buffer[6], 4);
             printf("prijat desiredPosition %d\n", desiredPosition);
+            
+            PosHistory[timemark] = position;
+            DesPosHistory[timemark] = desiredPosition;
+            //TODO speed * +- direction
+            PWMHistory[timemark] = speed;
+            if(timemark > 999){
+                PosHistorySWAP[timemark-999] = position;
+                DesPosHistory[timemark-999] = desiredPosition;
+                //TODO speed * +- direction
+                PWMHistory[timemark-999] = speed;
+            }
+            if(timemark == 1998) {
+              timemark = 998;
+              short *tmpptr = PosHistory;
+              PosHistory = PosHistorySWAP;
+
+              tmpptr = DesPosHistory;
+              PosHistory = DesPosHistorySWAP;
+
+              tmpptr = PWMHistory;
+              PosHistory = PWMHistorySWAP;
+            }
+            timemark++;
         }
     }
     return;

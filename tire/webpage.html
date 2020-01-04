@@ -1,13 +1,72 @@
-<html>
-  <head>
-    <title>Motion Control</title>
-  </head>
-  <body onload="setTimeout(function(){location.reload()}, 100);"
-        style="background-color: yellowgreen;">>
-    <script>document.write(Date.now());</script>
-    <h1>Motion control</h1>
+<!DOCTYPE HTML>
+<html style="background-color: yellowgreen;">
+<head>
+  <h1 align="center">Motion Ownage</h1>
+<script type="text/javascript">
+//setTimeout(function(){location.reload()}, 1000);
+window.onload = function () {
+  var chart = new CanvasJS.Chart("chartContainer", {
+	animationEnabled: false,  
+	title:{
+		text: "Motor position"
+	},
+	axisY: {
+		title: "Position",
+		valueFormatString: "#0,,.",
+		suffix: "",
+	},
+	data: [{
+    name: "Desired position",
+    showInLegend: true,
+		yValueFormatString: "#,### Units",
+		xValueFormatString: "####",
+		type: "spline",
+		dataPoints: [ //&
+		]
+	},
+  {
+    name: "Actual position",
+    showInLegend: true,
+		yValueFormatString: "#,### Units",
+		xValueFormatString: "####",
+		type: "spline",
+		dataPoints: [ //@
+		]
+	}]
+});
+chart.render();
 
-    
-  </body>
-  <footer>Created by Tomas Kasl and Zdenek Syrovy</footer>
+var chart2 = new CanvasJS.Chart("chartContainer2", {
+	animationEnabled: false,  
+	title:{
+		text: "PMW level"
+	},
+	axisY: {
+		title: "PMW level",
+		valueFormatString: "#0,,.",
+		suffix: "",
+	},
+	data: [{
+    name: "PMW",
+		yValueFormatString: "#,### Units",
+		xValueFormatString: "####",
+		type: "spline",
+		dataPoints: [ //&
+		]
+	}]
+});
+chart2.render();
+}
+</script>
+</head>
+<body>
+<div align="center" id="chartContainer" style="height: 370px; width: 90%;"></div>
+<div id="chartContainer2" style="height: 370px; width: 90%;"></div>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"> </script>
+
+</body>
+<footer>
+  By Tomas Kasl and Zdenek Syrovy
+  FEL CTU 2020
+</footer>
 </html>

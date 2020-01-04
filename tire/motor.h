@@ -73,8 +73,8 @@
 #define BASE_DUTY 0xB0
 
 
-volatile char a, b, prev_a, prev_b;
-volatile int position, desiredPosition;
+volatile char a, b, prev_a, prev_b, direction;
+volatile int position, desiredPosition, speed;
 
 
 void motorWatcher(void);

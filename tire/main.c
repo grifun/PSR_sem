@@ -15,5 +15,6 @@ int main(){
 	//connectionListenerInit();
 	int listener = taskSpawn("listener", PRIORITY, 0, 4096, (FUNCPTR)connectionListener, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 	int PID = taskSpawn("pid", PRIORITY+1, 0, 4096, (FUNCPTR)PID, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	
 	while(1);
 }

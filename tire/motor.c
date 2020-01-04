@@ -101,8 +101,8 @@ void rotate(unsigned speed, char direction) {
 
 void PID() {
         while(1) {
-                int speed = abs(desiredPosition - position) / 512;
-                char direction = sign(desiredPosition - position);
+                speed = abs(desiredPosition - position) / 512;
+                direction = sign(desiredPosition - position);
                 rotate(speed, direction);
         }
 }
