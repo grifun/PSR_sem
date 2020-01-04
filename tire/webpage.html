@@ -1,8 +1,9 @@
 <!DOCTYPE HTML>
 <html style="background-color: yellowgreen;">
 <head>
-  <h1 align="center">Motion Ownage</h1>
-<script type="text/javascript">
+  <h1 align="center" style="color: red; font-size: 12pc;"><u>Motion Ownage</u></h1>
+  <h3 style="color: red; font-size: 4pc;">Graphs:</h3>
+<script type="text/javascript" id="myHtml">
 //setTimeout(function(){location.reload()}, 1000);
 window.onload = function () {
   var chart = new CanvasJS.Chart("chartContainer", {
@@ -36,6 +37,7 @@ window.onload = function () {
 });
 chart.render();
 
+
 var chart2 = new CanvasJS.Chart("chartContainer2", {
 	animationEnabled: false,  
 	title:{
@@ -60,13 +62,13 @@ chart2.render();
 </script>
 </head>
 <body>
-<div align="center" id="chartContainer" style="height: 370px; width: 90%;"></div>
-<div id="chartContainer2" style="height: 370px; width: 90%;"></div>
+<div align="center" id="chartContainer" style="height: 370px; width: 97%; margin: 2pc"></div>
+<div id="chartContainer2" style="height: 370px; width: 97%; margin: 2pc;"></div>
 <script src="https://canvasjs.com/assets/script/canvasjs.min.js"> </script>
 
 </body>
-<footer>
-  By Tomas Kasl and Zdenek Syrovy
+<footer style="font-size: 2pc;">
+  By Tomas Kasl and Zdenek Syrovy<br>
   FEL CTU 2020
 </footer>
 </html>

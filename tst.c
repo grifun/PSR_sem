@@ -29,13 +29,12 @@ void serve(int fd) {
     fprintf(tunnel, "HTTP/1.0 200 OK\r\n\r\n");
     //fprintf(tunnel, "Current time is %ld.\n");
     int chr;
-   // load html file
-    
+   // load html file 
     FILE *source = fopen(WEBPAGE, "r");
     if(source == NULL){
         perror("incorrect html source");
     }
-   // send all his contents
+   // send all his contents, when a special tag char found, instead send the plot data
     while( (chr = fgetc(source) ) != EOF) {
         switch(chr) {
           case '&':
@@ -47,6 +46,11 @@ void serve(int fd) {
             fputc('\n',tunnel);
             for(int i=0; i<100; i++) {
                 fprintf(tunnel, "{x: %d, y: %d},",i, 99-i);
+            } break;
+          case '$':
+            fputc('\n',tunnel);
+            for(int i=0; i<50; i++) {
+                fprintf(tunnel, "{x: %d, y: %d},",i, 10*i/(i+3));
             } break;
           default:
             fputc(chr, tunnel);
