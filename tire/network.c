@@ -18,6 +18,7 @@ void www()
   serverAddr.sin_family = AF_INET;
   serverAddr.sin_port = htons(SERVER_PORT);
   serverAddr.sin_addr.s_addr = htonl(INADDR_ANY);
+  
   inet_pton(AF_INET,ip, &serverAddr);
   
   s=socket(AF_INET, SOCK_STREAM, 0);

@@ -1,13 +1,4 @@
-
-
-#include <inetLib.h>
-#include <sockLib.h>
-#include <string.h> 
-#include <stdio.h> 
-
 #include "network.h"
-
-#define MANAGEMENT_PORT 42420
 
 struct sockaddr_in my_addr, target_addr;
 int sockd, addrlen;
@@ -43,7 +34,7 @@ void networkInit(char* ip){
         printf("failed to set timeout\n");
         return;
     }
-
+q
     if (bind(sockd, (struct sockaddr *)&my_addr, sizeof(my_addr)) == -1) {
         printf("failed to bind socket \n");
         return;
@@ -56,5 +47,4 @@ void sendPacket(int position) {
 	memcpy(buffer+6, &position, 4);
 	printf("sending packet %d \n",*(int*)(buffer+6));
 	sendto(sockd, buffer, 11, 0,(struct sockaddr*)&target_addr, sizeof(target_addr));
-	
 }
