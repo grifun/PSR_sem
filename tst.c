@@ -56,8 +56,10 @@ void serve(int fd) {
             fputc(chr, tunnel);
         }
     }
-    fclose(source);
+    //fprintf(tunnel, "\n");
+    fprintf(tunnel, "\0");
     fclose(tunnel);
+    fclose(source);
 }
 
 void www()
@@ -72,7 +74,6 @@ void www()
   serverAddr.sin_family = AF_INET;
   serverAddr.sin_port = htons(SERVER_PORT);
   serverAddr.sin_addr.s_addr = INADDR_ANY;
-  //inet_pton(AF_INET,ip, &serverAddr);
   
   s=socket(AF_INET, SOCK_STREAM, 0);
   if (s<0)

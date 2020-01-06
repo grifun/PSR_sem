@@ -73,7 +73,7 @@ void rotate(unsigned speed, char direction) {
 		return;
 	}
 	//printf("nastavuju %x\n", (direction << 30) | (BASE_DUTY * speed));
-	PWM_CONTROL = (direction << 30) | ( (BASE_DUTY/2) * speed);
+	PWM_CONTROL = (direction << 30) | ( (BASE_DUTY) * speed);
 }
 
 void PID() {
