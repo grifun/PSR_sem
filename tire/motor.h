@@ -6,6 +6,8 @@
 #include <intLib.h>
 #include <iv.h>
 #include <math.h>
+#include "global.h"
+#include <unistd.h>
 
 #include <xlnx_zynq7k.h>
 
@@ -66,15 +68,15 @@
 #define PWM_PERIOD REGISTER(MOTOR_BASE, 0x8)
 #define PWM_CONTROL REGISTER(MOTOR_BASE, 0xC)
 
-#define LEFT 1
-#define RIGHT 0
+#define LEFT 2
+#define RIGHT 1
 #define MIN_DUTY 0xB0
 #define MAX_DUTY 0x4000
 #define BASE_DUTY 0xB0
-
+//#define BASE_DUTY 0xAE
 
 volatile char a, b, prev_a, prev_b, direction;
-volatile int position, desiredPosition, speed;
+volatile int position, speed;
 
 
 void motorWatcher(void);

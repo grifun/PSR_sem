@@ -27,8 +27,6 @@ void www()
   serverAddr.sin_port = htons(SERVER_PORT);
   serverAddr.sin_addr.s_addr = htonl(INADDR_ANY);
   
-  inet_pton(AF_INET,ip, &serverAddr);
-  
   s=socket(AF_INET, SOCK_STREAM, 0);
   if (s<0)
   {
@@ -47,7 +45,7 @@ void www()
     return;
   }
 
-  if (listen(s, SERVER_MAX_CONNECTIONS) == <0)
+  if (listen(s, SERVER_MAX_CONNECTIONS) < 0)
   {
     perror("www listen");
     close(s);
@@ -89,21 +87,22 @@ void serve(int fd) {
         perror("incorrect html source");
     }
    // send all his contents
+    int i;
     while( (chr = fgetc(source) ) != EOF) {
         switch(chr) {
           case '&':
             fputc('\n',tunnel);
-            for(int i=0; i<timemark; i++) {
+            for(i=0; i<timemark; i++) {
                 fprintf(tunnel, "{x: %d, y: %d},",i, PosHistory[i]);
             } break;
           case '@':
             fputc('\n',tunnel);
-            for(int i=0; i<timemark; i++) {
+            for(i=0; i<timemark; i++) {
                 fprintf(tunnel, "{x: %d, y: %d},",i, DesPosHistory[i]);
             } break;
           case '$':
             fputc('\n',tunnel);
-            for(int i=0; i<timemark; i++) {
+            for(i=0; i<timemark; i++) {
                 fprintf(tunnel, "{x: %d, y: %d},",i, PWMHistory[i]);
             } break;
           default:
@@ -143,22 +142,23 @@ void initreceive(){
 
 void connectionListener(){
     char buffer[11];
-    s = socket(AF_INET, SOCK_DGRAM, 0);
     socklen_t srclen=sizeof(src);
     buffer[10] = 0;
     printf("in answererTask\n");
     ssize_t status;
     while(!FINISHED){
-        status = recvfrom(s,buf,MAX_BUF,0,(struct sockaddr*)&src,&srclen);
+    	//printf("waiting for packet\n");
+        status = recvfrom(sockd,buffer,11,0,(struct sockaddr*)&src,&srclen);
         if(status < 0){
             //printf("ERROR: %s\n", strerror(errno));
             continue;
         }
-        if (buffer[0] == 'P' && buffer[1] == 'W' && buf[fer2] == 'N' && buffer[3] == 'S' && buffer[4] == 'T' && buffer[5] == 'N') {
+        if (buffer[0] == 'P' && buffer[1] == 'W' && buffer[2] == 'N' && buffer[3] == 'S' && buffer[4] == 'T' && buffer[5] == 'N') {
             //TODO musime to poslat do PIDčka
-            memcpy(&desiredPosition, *(int *) buffer[6], 4);
-            printf("prijat desiredPosition %d\n", desiredPosition);
-            
+            memcpy(&desiredPosition, buffer+6, 4);
+            //printf("prijat desiredPosition %d\n", desiredPosition);
+           
+            /* 
             PosHistory[timemark] = position;
             DesPosHistory[timemark] = desiredPosition;
             //TODO speed * +- direction
@@ -181,6 +181,7 @@ void connectionListener(){
               PosHistory = PWMHistorySWAP;
             }
             timemark++;
+            */
         }
     }
     return;

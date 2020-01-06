@@ -48,14 +48,14 @@ void motorWatcherInit() {
         GPIO_INT_POLARITY = 0x0;         /* rising edge */
         GPIO_INT_ANY = 0x0;              /* ignore falling edge */
         GPIO_INT_ENABLE = MOTOR_IRQ_PIN; /* enable interrupt on MOTOR_IRQ pin */
-
+        position = 0;
         intConnect(INUM_TO_IVEC(INT_LVL_GPIO), motorWatcher, 0);
         intEnable(INT_LVL_GPIO);         /* enable all GPIO interrupts */
 }
 
 void motorInit() {
-        MOTOR_CR = 0b1000000;
-	PWM_PERIOD = 5000;
+		MOTOR_CR = 0b1000000;
+		PWM_PERIOD = 5000;
 }
 
 void watcherCleanup(void){
@@ -65,30 +65,7 @@ void watcherCleanup(void){
         intDisconnect(INUM_TO_IVEC(INT_LVL_GPIO), motorWatcher, 0);
 }
 
-/*
- * Entry point for DKM.
- */
-void motor()
-{
-        TASK_ID st;
-
-        motorInit();
-
-        while (1) {
-            printf("IRQ count: %u\n", irq_count);
-            sleep(1);
-        }
-
-        irc_cleanup();
-}
-
 void rotate(unsigned speed, char direction) {
-	/* optimal fast boi
-	MOTOR_CR = 0b1000000; set manual control
-        PWM_PERIOD = 50000; perioda v 10ns
-        PWM_CONTROL = 0xA0000000; prvni 2 bity vlevo smer, ostatni byty percentage
-        */
-	//PWM_PERIOD = 50000;
 	if( (direction != LEFT) && (direction != RIGHT) ) {
 		return;
 	}
@@ -96,13 +73,24 @@ void rotate(unsigned speed, char direction) {
 		return;
 	}
 	//printf("nastavuju %x\n", (direction << 30) | (BASE_DUTY * speed));
-	PWM_CONTROL = (direction << 30) | (BASE_DUTY * speed);
+	PWM_CONTROL = (direction << 30) | ( (BASE_DUTY/2) * speed);
 }
 
 void PID() {
+		printf("in pid \n");
         while(1) {
-                speed = abs(desiredPosition - position) / 512;
-                direction = sign(desiredPosition - position);
+        		if(desiredPosition == position){
+        			rotate(0, direction);
+        			continue;
+        		}
+                speed = (desiredPosition - position) / 10;
+                if(speed < 0)
+                	speed = -speed;
+                if(speed > 100)
+                	speed = 100;
+                direction = ( (desiredPosition - position) < 0) + 1;
+        		printf("position %d desPos %d speed %d direction %d\n",position, desiredPosition, speed, direction);
                 rotate(speed, direction);
+                //sleep(1);
         }
 }

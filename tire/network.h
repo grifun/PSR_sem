@@ -10,11 +10,14 @@
 #include <net/if.h>
 #include <string.h>
 #include <unistd.h>
+#include <taskLib.h>
+#include "global.h"
 
 #define SERVER_PORT     80 /* Port 80 is reserved for HTTP protocol */
 #define SERVER_MAX_CONNECTIONS  20
 #define MANAGEMENT_PORT 42420
 #define WEBPAGE "webpage.html"
+#define PRIORITY 100
 #define ifreq_offsetof(x)  offsetof(struct ifreq, x)
 
 void www();
