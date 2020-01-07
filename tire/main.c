@@ -8,8 +8,10 @@
 #include <sysLib.h>
 #include "global.h"
 
-#define PRIORITY 100
-
+// network listener priority
+#define LISTENER_PRIORITY 100
+// motor rotation priority
+#define PID_PRIORITY 150
 
 int main(){
 	//www();
@@ -18,7 +20,7 @@ int main(){
 	motorWatcherInit();
 	initreceive();
 	taskSpawn("listener", PRIORITY, 0, 4096, (FUNCPTR)connectionListener, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-	taskSpawn("pid",150, 0, 4096, (FUNCPTR)PID, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	taskSpawn("pid",LISTENER_PRIORITY, 0, 4096, (FUNCPTR)PID, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 	//rotate(50, LEFT);
 	while(1);
 }

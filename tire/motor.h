@@ -67,9 +67,14 @@
 
 #define PWM_PERIOD REGISTER(MOTOR_BASE, 0x8)
 #define PWM_CONTROL REGISTER(MOTOR_BASE, 0xC)
-
+/**
+ * directions
+ */
 #define LEFT 2
 #define RIGHT 1
+/**
+ * speed definition
+ */
 #define MIN_DUTY 0xB0
 #define MAX_DUTY 0x4000
 #define BASE_DUTY 0xB0
@@ -78,10 +83,18 @@
 volatile char a, b, prev_a, prev_b, direction;
 volatile int position, speed;
 
-
+/*
+ * interupt handler for engine
+ */
 void motorWatcher(void);
+/**
+ * initiation of all relevant registers and constants
+ */
 void motorWatcherInit();
 void motorInit();
+/**
+ * disables and disconnects
+ */
 void watcherCleanup(void);
 void motor();
 void rotate(unsigned speed, char direction);

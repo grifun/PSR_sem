@@ -1,7 +1,9 @@
 #include "motor.h"
 
 volatile unsigned irq_count;
-
+/**
+ * interrupt handler 
+ */
 void motorWatcher() {
         a = (MOTOR_SR & BIT(MOTOR_SR_IRC_A_MON)) != 0;
         b = (MOTOR_SR & BIT(MOTOR_SR_IRC_B_MON)) != 0;
@@ -40,7 +42,9 @@ void motorWatcher() {
         irq_count++;
         GPIO_INT_STATUS = MOTOR_IRQ_PIN; /* clear the interrupt */
 }
-
+/**
+ * initiation of all needed constants and registers, connecting interrupt hanlder and enabling of all GPIO interrupts
+ */
 void motorWatcherInit() {
         GPIO_INT_STATUS = MOTOR_IRQ_PIN; /* reset status */
         GPIO_DIRM = 0x0;                 /* set as input */
@@ -64,7 +68,11 @@ void watcherCleanup(void){
         intDisable(INT_LVL_GPIO);
         intDisconnect(INUM_TO_IVEC(INT_LVL_GPIO), motorWatcher, 0);
 }
-
+/**
+ * sets rotation of engine in direction and with speed params
+ * @param speed percent of base
+ * direction LEFT or RIGHT 
+ */
 void rotate(unsigned speed, char direction) {
 	if( (direction != LEFT) && (direction != RIGHT) ) {
 		return;
@@ -75,7 +83,9 @@ void rotate(unsigned speed, char direction) {
 	//printf("nastavuju %x\n", (direction << 30) | (BASE_DUTY * speed));
 	PWM_CONTROL = (direction << 30) | ( (BASE_DUTY) * speed);
 }
-
+/**
+ * function that sets speed of rotation in dependecy with desired position and position
+ */
 void PID() {
 		printf("in pid \n");
         while(1) {
