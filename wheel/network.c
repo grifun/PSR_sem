@@ -1,10 +1,8 @@
 #include "network.h"
-
-struct sockaddr_in my_addr, target_addr;
-int sockd, addrlen;
-struct timeval tval;
-char buffer[11];
-
+/**
+ * initiates global variables retaled to network, addresses, socket
+ * and marks sended packet with "PWNSTN" mark 
+ */
 void networkInit(char* ip){
     tval.tv_sec = 0;
     tval.tv_usec = 1000000;
@@ -34,7 +32,6 @@ void networkInit(char* ip){
         printf("failed to set timeout\n");
         return;
     }
-q
     if (bind(sockd, (struct sockaddr *)&my_addr, sizeof(my_addr)) == -1) {
         printf("failed to bind socket \n");
         return;
@@ -42,7 +39,9 @@ q
     strcpy(buffer, "PWNSTN");
     
 }
-
+/**
+ * sends packet to target_addr containg "PWNSTN" and mark
+ */
 void sendPacket(int position) {
 	memcpy(buffer+6, &position, 4);
 	printf("sending packet %d \n",*(int*)(buffer+6));

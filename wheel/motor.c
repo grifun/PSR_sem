@@ -71,14 +71,19 @@
 #define PWM_PERIOD REGISTER(MOTOR_BASE, 0x8)
 #define PWM_CONTROL REGISTER(MOTOR_BASE, 0xC)
 
+// directions
 #define LEFT 2
 #define RIGHT 1
+// speed constants
 #define MIN_DUTY 0xB0
 #define MAX_DUTY 0x4000
 #define BASE_DUTY 0xB0
 
 
-
+/**
+ * interrupt handler, checkes which way engine rotated and sets global position accordingly.
+ * 
+ */
 void motorWatcher() {
         a = (MOTOR_SR & BIT(MOTOR_SR_IRC_A_MON)) != 0;
         b = (MOTOR_SR & BIT(MOTOR_SR_IRC_B_MON)) != 0;
@@ -117,7 +122,9 @@ void motorWatcher() {
         irq_count++;
         GPIO_INT_STATUS = MOTOR_IRQ_PIN; /* clear the interrupt */
 }
-
+/**
+ * initiation of all needed constants and registers, connecting interrupt hanlder and enabling of all GPIO interrupts
+ */
 void motorWatcherInit() {
         GPIO_INT_STATUS = MOTOR_IRQ_PIN; /* reset status */
         GPIO_DIRM = 0x0;                 /* set as input */
@@ -129,7 +136,9 @@ void motorWatcherInit() {
         intConnect(INUM_TO_IVEC(INT_LVL_GPIO), motorWatcher, 0);
         intEnable(INT_LVL_GPIO);         /* enable all GPIO interrupts */
 }
-
+/**
+ * disables GPIO interrupts, disconnect motor interrupt handler
+ */
 void motorWatcherCleanup() {
         GPIO_INT_DISABLE = MOTOR_IRQ_PIN;
 
