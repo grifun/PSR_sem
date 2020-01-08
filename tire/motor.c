@@ -105,7 +105,7 @@ void PID() {
                     speed = delta/2;
                 direction = ( (desiredPosition - position) < 0) + 1;
 				//printf("position %d, desPos %d, speed %d, direction %d\n", position, desiredPosition, speed, direction);
-                rotate(speed+20, direction);//a constant bias to make the motor actually moving
+                rotate(speed+25, direction);//a constant bias to make the motor actually moving
                 nanosleep(&tim , &tim2);
         }
 }
