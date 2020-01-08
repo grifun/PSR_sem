@@ -1,3 +1,8 @@
+/**
+ * !file tire/main.c
+ * starting point for tire
+ */
+ 
 #include "motor.h"
 #include "network.h"
 #include <time.h>
