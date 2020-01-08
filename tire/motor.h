@@ -100,7 +100,6 @@ void motorInit();
  * disables and disconnects
  */
 void watcherCleanup(void);
-void motor();
 /** sets motor in motion 
 @param speed percent of speed base 
 @param direction LEFT or RIGHT 
