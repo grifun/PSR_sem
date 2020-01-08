@@ -3,19 +3,6 @@
 */
 #include "network.h"
 
-short* PosHistory;
-short* PosHistorySWAP;
-short* DesPosHistory;
-short* DesPosHistorySWAP;
-short* PWMHistory;
-short* PWMHistorySWAP;
-unsigned timemark = 0;
-
-int FINISHED = 0;
-int sockd;
-int yes = 1;
-struct sockaddr_in serverAddr, src, mngAddr, my_addr;
-struct timeval tval;
 /** creates a connection to web server and maintains it*/
 void www()
 {

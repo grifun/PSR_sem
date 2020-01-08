@@ -80,9 +80,7 @@
 /**
  * speed definition
  */
-#define MIN_DUTY 0xB0
-#define MAX_DUTY 0x4000
-#define BASE_DUTY 0xB0/64
+#define BASE_DUTY 0x4
 
 volatile char a, b, prev_a, prev_b;
 struct timespec tim, tim2;

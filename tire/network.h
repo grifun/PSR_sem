@@ -25,6 +25,20 @@
 #define PRIORITY 100
 #define ifreq_offsetof(x)  offsetof(struct ifreq, x)
 
+short* PosHistory;
+short* PosHistorySWAP;
+short* DesPosHistory;
+short* DesPosHistorySWAP;
+short* PWMHistory;
+short* PWMHistorySWAP;
+unsigned timemark = 0;
+
+int FINISHED = 0;
+int sockd;
+int yes = 1;
+struct sockaddr_in serverAddr, src, mngAddr, my_addr;
+struct timeval tval;
+
 /** function called by thread responsible for updating web server */
 void www();
 void serve(int fd);
