@@ -77,30 +77,29 @@ void rotate(unsigned speed, char direction) {
 	if( (direction != LEFT) && (direction != RIGHT) ) {
 		return;
 	}
-	if( (speed < 0) || (speed > 100) ) {
-		return;
+	if(speed < 20) {
+		speed = 20;
 	}
-	//printf("nastavuju %x\n", (direction << 30) | (BASE_DUTY * speed));
-	PWM_CONTROL = (direction << 30) | ( (BASE_DUTY) * speed);
+	PWM_CONTROL = (direction << 30) | ( BASE_DUTY * speed);
 }
 /**
  * function that sets speed of rotation in dependecy with desired position and position
  */
 void PID() {
-		printf("in pid \n");
+		printf("PID started \n");
+		int delta;
         while(1) {
         		if(desiredPosition == position){
         			rotate(0, direction);
         			continue;
         		}
-                speed = (desiredPosition - position) / 10;
-                if(speed < 0)
-                	speed = -speed;
-                if(speed > 100)
-                	speed = 100;
+                delta = desiredPosition - position; //higher delta, higher speed
+                if(delta < 0)
+                	delta = -delta;
+				speed = delta + 50; //a constant bias to make the motor actually moving
                 direction = ( (desiredPosition - position) < 0) + 1;
-        		printf("position %d desPos %d speed %d direction %d\n",position, desiredPosition, speed, direction);
+				//printf("position %d, desPos %d, speed %d, direction %d\n", position, desiredPosition, speed, direction);
                 rotate(speed, direction);
-                //sleep(1);
+                nanosleep(&tim , &tim2);
         }
 }
