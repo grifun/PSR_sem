@@ -1,11 +1,11 @@
 #include "network.h"
 
-short PosHistory[2000];
-short PosHistorySWAP[2000];
-short DesPosHistory[2000];
-short DesPosHistorySWAP[2000];
-short PWMHistory[2000];
-short PWMHistorySWAP[2000];
+short* PosHistory;
+short* PosHistorySWAP;
+short* DesPosHistory;
+short* DesPosHistorySWAP;
+short* PWMHistory;
+short* PWMHistorySWAP;
 short timemark = 0;
 
 int FINISHED = 0;
