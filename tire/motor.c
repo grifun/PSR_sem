@@ -79,9 +79,10 @@ void rotate(unsigned speed, char direction) {
 	if( (direction != LEFT) && (direction != RIGHT) ) {
 		return;
 	}
-	if(speed < 20) {
-		speed = 20;
-	}
+	if(speed < 0)
+		return;
+	if(speed > 100)
+		speed = 100
 	PWM_CONTROL = (direction << 30) | ( BASE_DUTY * speed);
 }
 /**
