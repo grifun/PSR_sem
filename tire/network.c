@@ -2,7 +2,12 @@
 \file tire/network.c
 */
 #include "network.h"
-
+unsigned timemark = 0;
+int FINISHED = 0;
+int sockd;
+int yes = 1;
+struct sockaddr_in serverAddr, src, mngAddr, my_addr;
+struct timeval tval;
 /** creates a connection to web server and maintains it*/
 void www()
 {
@@ -63,18 +68,19 @@ void serve(int fd) {
 	printf("Serving a HTML page\n");
     FILE *tunnel = fdopen(fd, "w");
     fprintf(tunnel, "HTTP/1.0 200 OK\r\n\r\n");
-    fprintf(tunnel, "<!DOCTYPE HTML>\n<html style='background-color: yellowgreen;'>\n<head>\n  <h1 align='center' style='color: red; font-size: 9pc;'><u>Motion Ownage</u></h1>\n  <h3 style='color: red; font-size: 2pc;'>Graphs:</h3>\n<script type='text/javascript' id='myHtml'>\nsetTimeout(function(){location.reload()}, 1000);\nwindow.onload = function () {\n  var chart = new CanvasJS.Chart('chartContainer', {\n	animationEnabled: false,  \n	title:{\n		text: 'Motor position'\n	},\n	axisY: {\n		title: 'Position',\n		valueFormatString: '#0,,.',\n		suffix: '',\n	},\n	data: [{\n    name: 'Desired position',\n    showInLegend: true,\n		yValueFormatString: '#,### Units',\n		xValueFormatString: '####',\n		type: 'spline',\n		dataPoints: [ //&\n		]\n	},\n  {\n    name: 'Actual position',\n    showInLegend: true,\n		yValueFormatString: '# increments',\n		xValueFormatString: '# ms',\n		type: 'spline',\n		dataPoints: [");
+    fprintf(tunnel, "<!DOCTYPE HTML>\n<html style='background-color: yellowgreen;'>\n<head>\n  <h1 align='center' style='color: red; font-size: 9pc;'><u>Motion Ownage</u></h1>\n  <h3 style='color: red; font-size: 2pc;'>Graphs:</h3>\n<script type='text/javascript' id='myHtml'>\nsetTimeout(function(){location.reload()}, 1000);\nwindow.onload = function () {\n  var chart = new CanvasJS.Chart('chartContainer', {\n	animationEnabled: false,  \n	title:{\n		text: 'Motor position'\n	},\n	axisY: {\n		title: 'Position',\n		valueFormatString: '# increments',\n		suffix: '',\n	},\n	data: [{\n    name: 'Desired position',\n    showInLegend: true,\n		yValueFormatString: '#,### Units',\n		xValueFormatString: '####',\n		type: 'spline',\n		dataPoints: [ //&\n		]\n	},\n  {\n    name: 'Actual position',\n    showInLegend: true,\n		yValueFormatString: '# increments',\n		xValueFormatString: '# ms',\n		type: 'spline',\n		dataPoints: [");
     int i;
-    for(i=0; i<timemark; i++) {
-        fprintf(tunnel, "{x: %d, y: %d},",i,PosHistory[i]);
+    int moment=timemark;
+    for(i=0; i<moment; i++) {
+        fprintf(tunnel, "{x: %d, y: %d},",i-moment, PosHistory[i]);
     };
     fprintf(tunnel, "]\n	},\n  {\n    name: 'Desired position',\n    showInLegend: true,\n		yValueFormatString: '# increments',\n		xValueFormatString: '# ms',\n		type: 'spline',\n		dataPoints: [");
-    for(i=0; i<timemark; i++) {
-        fprintf(tunnel, "{x: %d, y: %d},",i,DesPosHistory[i]);
+    for(i=0; i<moment; i++) {
+        fprintf(tunnel, "{x: %d, y: %d},",i-moment, DesPosHistory[i]);
     };
-    fprintf(tunnel, "]	}]});chart.render();\nvar chart2 = new CanvasJS.Chart('chartContainer2', {\n	animationEnabled: false,  \n	title:{\n		text: 'PMW level'\n	},\n	axisY: {\n		title: 'PMW level',\n		valueFormatString: '#0,,.',\n		suffix: '',\n	},\n	data: [{\n    name: 'PMW',\n		yValueFormatString: '# % Units',\n		xValueFormatString: '# ms',\n		type: 'spline',\n		dataPoints: [");
-    for(i=0; i<timemark; i++) {
-    	fprintf(tunnel, "{x: %d, y: %d},",i, PWMHistory[i]);
+    fprintf(tunnel, "]	}]});chart.render();\nvar chart2 = new CanvasJS.Chart('chartContainer2', {\n	animationEnabled: false,  \n	title:{\n		text: 'PMW level'\n	},\n	axisY: {\n		title: 'PMW level',\n		valueFormatString: '# percent',\n		suffix: '',\n	},\n	data: [{\n    name: 'PMW',\n		yValueFormatString: '# percent',\n		xValueFormatString: '# ms',\n		type: 'spline',\n		dataPoints: [");
+    for(i=0; i<moment; i++) {
+    	fprintf(tunnel, "{x: %d, y: %d},",i-moment, PWMHistory[i]);
     };
     fprintf(tunnel, "]\n	}]\n});\nchart2.render();\n}\n</script>\n</head>\n<body>\n<div align='center' id='chartContainer' style='height: 370px; width: 97%; margin: 2pc'></div>\n<div id='chartContainer2' style='height: 370px; width: 97%; margin: 2pc;'></div>\n<script src='https://canvasjs.com/assets/script/canvasjs.min.js'> </script>\n\n<footer style='font-size: 1pc;'>\n  By Tomas Kasl and Zdenek Syrovy<br>\n  FEL CTU 2020\n</footer>\n</body>\n</html>\n");
     printf("serving done\n");
