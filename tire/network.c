@@ -167,10 +167,13 @@ void connectionListener(){
               timemark = 999;
               short *tmpptr = PosHistory;
               PosHistory = PosHistorySWAP;
+              PosHistorySWAP = tmpptr;
               tmpptr = DesPosHistory;
               DesPosHistory = DesPosHistorySWAP;
+              DesPosHistorySWAP = tmpptr;
               tmpptr = PWMHistory;
               PWMHistory = PWMHistorySWAP;
+              PWMHistorySWAP = tmpptr;
             }
             timemark++;
         }
