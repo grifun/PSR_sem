@@ -1,3 +1,6 @@
+/**
+\file tire/network.c
+*/
 #include "network.h"
 
 short* PosHistory;
@@ -14,6 +17,7 @@ struct sockaddr_in my_addr;//my adress
 int sockd;
 struct timeval tval;
 int yes = 1;
+/** creates a connection to web server and maintains it*/
 void www()
 {
   int s;
@@ -66,7 +70,9 @@ void www()
     taskSpawn("service", PRIORITY+2, 0, 4096, (FUNCPTR)serve, newFd, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     }
 }
-
+/**
+* creates web page to be seen on ip adress same as adress of wheel.
+**/
 void serve(int fd) {
 	printf("Serving a HTML page\n");
     FILE *tunnel = fdopen(fd, "w");
@@ -88,7 +94,9 @@ void serve(int fd) {
     printf("serving done\n");
     fclose(tunnel);
 }
-
+/**
+* init all necessary adresses socket etc. to be able to receive packets, prepares memory for graphs data
+*/
 void connectionListenerInit(){
     PosHistory = malloc(2000*sizeof(short));
     PosHistorySWAP = malloc(2000*sizeof(short));
@@ -122,7 +130,9 @@ void connectionListenerInit(){
         return;
     }
 }
-
+/**
+* Listen to socket and waits till packet with information about position arrives, after it does change desired position to position that arrived from wheel.
+*/
 void connectionListener(){
     char buffer[11];
     socklen_t srclen=sizeof(src);
