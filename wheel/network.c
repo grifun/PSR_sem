@@ -1,5 +1,10 @@
 #include "network.h"
 /**
+   \file wheel/network.c
+ */
+
+
+/**
  * initiates global variables retaled to network, addresses, socket
  * and marks sended packet with "PWNSTN" mark 
  */

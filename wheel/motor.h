@@ -1,4 +1,7 @@
 /**
+   \file wheel/motor.h
+ */
+/**
  * motor related interface
  */
 

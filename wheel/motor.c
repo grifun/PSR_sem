@@ -1,3 +1,8 @@
+/**
+   \file wheel/motor.c
+ * Global variables for entire wheel
+ */
+
 
 
 #include <taskLib.h>

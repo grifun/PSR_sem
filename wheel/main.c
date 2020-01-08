@@ -1,3 +1,7 @@
+/**
+   \file wheel_main.c
+ * Global variables for entire wheel
+ */
 #include <taskLib.h>
 #include <stdio.h>
 #include <kernelLib.h>
@@ -10,12 +14,9 @@
 #include "motor.h"
 #include "network.h"
 /**
- * main section of the program section of the program
+ * sending period
  */
-
-/// sending packet period constants
-
-#define NSEC_WAIT 100000000L
+#define NANO_WAIT 100000000L
 #define SEC_WAIT 0
 #define TIRE_ADDRESS "192.168.202.205"
 /**
