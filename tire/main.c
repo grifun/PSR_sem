@@ -1,5 +1,5 @@
 /**
- * !file tire/main.c
+ *\file tire/main.c
  * starting point for tire
  */
  
@@ -13,7 +13,7 @@
 #include <sysLib.h>
 #include "global.h"
 
-// network listener priority
+/** network listener priority */
 #define PRIORITY 5
 
 int main(){
