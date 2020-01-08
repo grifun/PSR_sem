@@ -80,8 +80,7 @@
 #define BASE_DUTY 0xB0
 //#define BASE_DUTY 0xAE
 
-volatile char a, b, prev_a, prev_b, direction;
-volatile int position, speed;
+volatile char a, b, prev_a, prev_b;
 
 /*
  * interupt handler for engine
