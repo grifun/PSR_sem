@@ -9,18 +9,17 @@
 #include "global.h"
 
 // network listener priority
-#define LISTENER_PRIORITY 100
-// motor rotation priority
-#define PID_PRIORITY 150
+#define PRIORITY 5
 
 int main(){
-	//www();
 	desiredPosition = 0;
 	motorInit();
 	motorWatcherInit();
 	initreceive();
+	printf("initialization succesful \n");
 	taskSpawn("listener", PRIORITY, 0, 4096, (FUNCPTR)connectionListener, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-	taskSpawn("pid",LISTENER_PRIORITY, 0, 4096, (FUNCPTR)PID, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-	//rotate(50, LEFT);
+	printf("waiting for position info \n");
+	taskSpawn("pid",PRIORITY-1, 0, 4096, (FUNCPTR)PID, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	taskSpawn("www",PRIORITY, 0, 4096, (FUNCPTR)www, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 	while(1);
 }
