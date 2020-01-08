@@ -1,3 +1,7 @@
+/**
+   \file wheel_main.c
+ * Global variables for entire wheel
+ */
 #include <taskLib.h>
 #include <stdio.h>
 #include <kernelLib.h>
@@ -14,7 +18,9 @@
  */
 
 /// sending packet period constants
-
+/**
+ * sending period
+ */
 #define NANO_WAIT 100000000L
 #define SEC_WAIT 0
 /**
