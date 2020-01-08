@@ -1,4 +1,8 @@
-
+/**
+ * \file tire/motor.h 
+ * interface for tire motor
+ */
+ 
 #include <taskLib.h>
 #include <stdio.h>
 #include <kernelLib.h>
@@ -97,5 +101,10 @@ void motorInit();
  */
 void watcherCleanup(void);
 void motor();
+/** sets motor in motion 
+@param speed percent of speed base 
+@param direction LEFT or RIGHT 
+*/
 void rotate(unsigned speed, char direction);
+/** sets speed of motor propotional to wanted direction*/
 void PID();
