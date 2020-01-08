@@ -1,3 +1,5 @@
+/** \file tire/motor.c */
+
 #include "motor.h"
 
 volatile unsigned irq_count;
