@@ -63,16 +63,16 @@ void serve(int fd) {
 	printf("Serving a HTML page\n");
     FILE *tunnel = fdopen(fd, "w");
     fprintf(tunnel, "HTTP/1.0 200 OK\r\n\r\n");
-    fprintf(tunnel, "<!DOCTYPE HTML>\n<html style='background-color: yellowgreen;'>\n<head>\n  <h1 align='center' style='color: red; font-size: 9pc;'><u>Motion Ownage</u></h1>\n  <h3 style='color: red; font-size: 2pc;'>Graphs:</h3>\n<script type='text/javascript' id='myHtml'>\nsetTimeout(function(){location.reload()}, 1000);\nwindow.onload = function () {\n  var chart = new CanvasJS.Chart('chartContainer', {\n	animationEnabled: false,  \n	title:{\n		text: 'Motor position'\n	},\n	axisY: {\n		title: 'Position',\n		valueFormatString: '#0,,.',\n		suffix: '',\n	},\n	data: [{\n    name: 'Desired position',\n    showInLegend: true,\n		yValueFormatString: '#,### Units',\n		xValueFormatString: '####',\n		type: 'spline',\n		dataPoints: [ //&\n		]\n	},\n  {\n    name: 'Actual position',\n    showInLegend: true,\n		yValueFormatString: '#,### Units',\n		xValueFormatString: '####',\n		type: 'spline',\n		dataPoints: [");
+    fprintf(tunnel, "<!DOCTYPE HTML>\n<html style='background-color: yellowgreen;'>\n<head>\n  <h1 align='center' style='color: red; font-size: 9pc;'><u>Motion Ownage</u></h1>\n  <h3 style='color: red; font-size: 2pc;'>Graphs:</h3>\n<script type='text/javascript' id='myHtml'>\nsetTimeout(function(){location.reload()}, 1000);\nwindow.onload = function () {\n  var chart = new CanvasJS.Chart('chartContainer', {\n	animationEnabled: false,  \n	title:{\n		text: 'Motor position'\n	},\n	axisY: {\n		title: 'Position',\n		valueFormatString: '#0,,.',\n		suffix: '',\n	},\n	data: [{\n    name: 'Desired position',\n    showInLegend: true,\n		yValueFormatString: '#,### Units',\n		xValueFormatString: '####',\n		type: 'spline',\n		dataPoints: [ //&\n		]\n	},\n  {\n    name: 'Actual position',\n    showInLegend: true,\n		yValueFormatString: '# increments',\n		xValueFormatString: '# ms',\n		type: 'spline',\n		dataPoints: [");
     int i;
     for(i=0; i<timemark; i++) {
         fprintf(tunnel, "{x: %d, y: %d},",i,PosHistory[i]);
     };
-    fprintf(tunnel, "]\n	},\n  {\n    name: 'Desired position',\n    showInLegend: true,\n		yValueFormatString: '#,### Units',\n		xValueFormatString: '####',\n		type: 'spline',\n		dataPoints: [");
+    fprintf(tunnel, "]\n	},\n  {\n    name: 'Desired position',\n    showInLegend: true,\n		yValueFormatString: '# increments',\n		xValueFormatString: '# ms',\n		type: 'spline',\n		dataPoints: [");
     for(i=0; i<timemark; i++) {
         fprintf(tunnel, "{x: %d, y: %d},",i,DesPosHistory[i]);
     };
-    fprintf(tunnel, "]	}]});chart.render();\nvar chart2 = new CanvasJS.Chart('chartContainer2', {\n	animationEnabled: false,  \n	title:{\n		text: 'PMW level'\n	},\n	axisY: {\n		title: 'PMW level',\n		valueFormatString: '#0,,.',\n		suffix: '',\n	},\n	data: [{\n    name: 'PMW',\n		yValueFormatString: '#,### Units',\n		xValueFormatString: '####',\n		type: 'spline',\n		dataPoints: [");
+    fprintf(tunnel, "]	}]});chart.render();\nvar chart2 = new CanvasJS.Chart('chartContainer2', {\n	animationEnabled: false,  \n	title:{\n		text: 'PMW level'\n	},\n	axisY: {\n		title: 'PMW level',\n		valueFormatString: '#0,,.',\n		suffix: '',\n	},\n	data: [{\n    name: 'PMW',\n		yValueFormatString: '# % Units',\n		xValueFormatString: '# ms',\n		type: 'spline',\n		dataPoints: [");
     for(i=0; i<timemark; i++) {
     	fprintf(tunnel, "{x: %d, y: %d},",i, PWMHistory[i]);
     };
