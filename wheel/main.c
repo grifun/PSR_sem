@@ -15,15 +15,16 @@
 
 /// sending packet period constants
 
-#define NANO_WAIT 100000000L
+#define NSEC_WAIT 100000000L
 #define SEC_WAIT 0
+#define TIRE_ADDRESS "192.168.202.205"
 /**
  * sends periodicly packet to ip adress specified in main program argument
  */
 void sender() {
 	struct timespec tim, tim2;
 	tim.tv_sec  = SEC_WAIT;
-	tim.tv_nsec = NANO_WAIT;
+	tim.tv_nsec = NSEC_WAIT;
 	while(1){
 		//printf("position: %d \n", position);
 		sendPacket(position);
@@ -34,9 +35,9 @@ void sender() {
 /**
  * Initiate all relevant constants and sends periodicly packet
  */
-int main(int argc, char *argv[]) {
+int main() {
 	motorWatcherInit();
-	networkInit(argv[1]);
+	networkInit(TIRE_ADDRESS);
 	sender();
     
     motorWatcherCleanup();

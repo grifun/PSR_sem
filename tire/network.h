@@ -13,6 +13,7 @@
 #include <taskLib.h>
 #include "global.h"
 
+#define BASE_DUTY 0xB0/64
 #define SERVER_PORT     80 /* Port 80 is reserved for HTTP protocol */
 #define SERVER_MAX_CONNECTIONS  20
 #define MANAGEMENT_PORT 42420
