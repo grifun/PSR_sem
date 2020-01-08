@@ -1,3 +1,7 @@
+/**
+\file tire/network.h
+*/
+
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -21,8 +25,11 @@
 #define PRIORITY 100
 #define ifreq_offsetof(x)  offsetof(struct ifreq, x)
 
+/** function called by thread responsible for updating web server */
 void www();
 void serve(int fd);
+/** initiation of Listener*/
 void connectionListenerInit();
+/** receiving packets from wheel */
 void connectionListener();
 void initreceive();
