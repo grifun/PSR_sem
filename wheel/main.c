@@ -16,7 +16,7 @@
 /**
  * sending period
  */
-#define NANO_WAIT 100000000L
+#define NSEC_WAIT 100000000L
 #define SEC_WAIT 0
 #define TIRE_ADDRESS "192.168.202.205"
 /**
