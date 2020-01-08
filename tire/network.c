@@ -150,11 +150,11 @@ void connectionListener(){
             
             if(timemark > 999){
                 PosHistorySWAP[timemark-1000] = position;
-                DesPosHistory[timemark-1000] = desiredPosition;
+                DesPosHistorySWAP[timemark-1000] = desiredPosition;
                 if (direction > 1)
-                	PWMHistory[timemark-1000] = -speed;
+                	PWMHistorySWAP[timemark-1000] = -speed;
                 else
-                	PWMHistory[timemark-1000] = speed; 
+                	PWMHistorySWAP[timemark-1000] = speed; 
         	}  		
             if(timemark == 1999) { //we got to the end of the container, we need to swap them
               timemark = 999;
