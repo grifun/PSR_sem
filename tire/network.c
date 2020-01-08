@@ -12,11 +12,10 @@ short* PWMHistorySWAP;
 unsigned timemark = 0;
 
 int FINISHED = 0;
-struct sockaddr_in serverAddr,src,mngAddr;
-struct sockaddr_in my_addr;//my adress
 int sockd;
-struct timeval tval;
 int yes = 1;
+struct sockaddr_in serverAddr, src, mngAddr, my_addr;
+struct timeval tval;
 /** creates a connection to web server and maintains it*/
 void www()
 {
@@ -114,7 +113,6 @@ void connectionListenerInit(){
     my_addr.sin_addr.s_addr = INADDR_ANY;
     my_addr.sin_port = htons(MANAGEMENT_PORT);
     memset(&(my_addr.sin_zero), '\0', 8);
-    int yes=1; 
     if (setsockopt(sockd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(yes)) == -1) {
         printf("failed to set reuse\n");
         return;
