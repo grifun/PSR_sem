@@ -57,7 +57,8 @@ void serve(int fd) {
         }
     }
     //fprintf(tunnel, "\n");
-    fprintf(tunnel, "\0");
+    fprintf(tunnel, "\r\n");
+    fputc(23, tunnel);
     fclose(tunnel);
     fclose(source);
 }

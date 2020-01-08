@@ -20,14 +20,14 @@
 #define SEC_WAIT 0
 #define TIRE_ADDRESS "192.168.202.205"
 /**
- * sends periodicly packet to ip adress specified in main program argument
+ * sends periodically packet to ip adress specified in main program argument
  */
 void sender() {
 	struct timespec tim, tim2;
 	tim.tv_sec  = SEC_WAIT;
 	tim.tv_nsec = NSEC_WAIT;
 	while(1){
-		//printf("position: %d \n", position);
+		printf("position: %d \n", position);
 		sendPacket(position);
 		nanosleep(&tim , &tim2);
 	}

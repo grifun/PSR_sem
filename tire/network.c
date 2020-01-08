@@ -63,13 +63,6 @@ void www()
       close(s);
       return;
     }
-    /* The client connected from IP address inet_ntoa(clientAddr.sin_addr)
-       and port ntohs(clientAddr.sin_port).
-
-       Start a new task for each request. The task will parse the request
-       and sends back the response.
-
-       Don't forget to close newFd at the end */
     taskSpawn("service", PRIORITY+2, 0, 4096, (FUNCPTR)serve, newFd, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     }
 }
@@ -96,7 +89,7 @@ void serve(int fd) {
     fclose(tunnel);
 }
 
-void initreceive(){
+void connectionListenerInit(){
     PosHistory = malloc(2000*sizeof(short));
     PosHistorySWAP = malloc(2000*sizeof(short));
     DesPosHistory = malloc(2000*sizeof(short));

@@ -15,11 +15,10 @@ int main(){
 	desiredPosition = 0;
 	motorInit();
 	motorWatcherInit();
-	initreceive();
+	connectionListenerInit();
 	printf("initialization succesful \n");
 	taskSpawn("listener", PRIORITY, 0, 4096, (FUNCPTR)connectionListener, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 	printf("waiting for position info \n");
 	taskSpawn("pid",PRIORITY-1, 0, 4096, (FUNCPTR)PID, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 	taskSpawn("www",PRIORITY, 0, 4096, (FUNCPTR)www, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-	while(1);
 }
