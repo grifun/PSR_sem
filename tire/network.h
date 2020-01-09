@@ -18,7 +18,7 @@
 #include "global.h"
 
 #define SERVER_PORT     80 /* Port 80 is reserved for HTTP protocol */
-#define SERVER_MAX_CONNECTIONS  20
+#define SERVER_MAX_CONNECTIONS  200
 #define MANAGEMENT_PORT 42420
 #define PRIORITY 5
 #define ifreq_offsetof(x)  offsetof(struct ifreq, x)
@@ -29,7 +29,11 @@ short* DesPosHistory;
 short* DesPosHistorySWAP;
 short* PWMHistory;
 short* PWMHistorySWAP;
-unsigned timemark = 0;
+short* tmpptr;
+
+int maxval;
+SEM_ID sem;
+struct timespec tim, tim2;
 
 /** function called by thread responsible for updating web server */
 void www();
