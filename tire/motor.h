@@ -80,10 +80,11 @@
 /**
  * speed definition
  */
-#define BASE_DUTY 0x4
+#define BASE_DUTY 50
 
 volatile char a, b, prev_a, prev_b;
 struct timespec tim, tim2;
+int last_irc_state;
 
 /*
  * interupt handler for engine
