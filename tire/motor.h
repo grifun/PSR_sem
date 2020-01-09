@@ -81,6 +81,7 @@
  * speed definition
  */
 #define BASE_DUTY 50
+#define TRANSITION(old, new) (((old) << 2) | new)
 
 volatile char a, b, prev_a, prev_b;
 struct timespec tim, tim2;
