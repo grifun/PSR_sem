@@ -79,15 +79,15 @@
 // speed constants
 #define MIN_DUTY 0xB0
 #define MAX_DUTY 0x4000
-#define BASE_DUTY 0xB0
-
-
 /**
  * motor related interface
  */
-volatile unsigned irq_count;
+#define BASE_DUTY 50
+#define TRANSITION(old, new) (((old) << 2) | new)
+
 volatile char a, b, prev_a, prev_b;
-volatile int position;
+struct timespec tim, tim2;
+int last_irc_state;
 
 /**
  * interupt handler for engine
