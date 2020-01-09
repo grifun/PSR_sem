@@ -1,75 +1,164 @@
-<!DOCTYPE HTML>
-<html style="background-color: yellowgreen;">
+<?xml version='1.0'?>
+<!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.0//EN' 'http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd'>
+<html style='background-color: yellowgreen;'>
 <head>
-  <h1 align="center" style="color: red; font-size: 12pc;"><u>Motion Ownage</u></h1>
-  <h3 style="color: red; font-size: 4pc;">Graphs:</h3>
-<script type="text/javascript" id="myHtml">
-  //setTimeout(function(){location.reload()}, 1000);
-  window.onload = function () {
-    var chart = new CanvasJS.Chart("chartContainer", {
-    animationEnabled: false,  
-    title:{
-      text: "Motor position"
-    },
-    axisY: {
-      title: "Position",
-      valueFormatString: "#0,,.",
-      suffix: "",
-    },
-    data: [{
-      name: "Desired position",
-      showInLegend: true,
-      yValueFormatString: "#,### Units",
-      xValueFormatString: "####",
-      type: "spline",
-      dataPoints: [ //&
-      ]
-    },
-    {
-      name: "Actual position",
-      showInLegend: true,
-      yValueFormatString: "#,### Units",
-      xValueFormatString: "####",
-      type: "spline",
-      dataPoints: [ //@
-      ]
-    }]
-  });
-  chart.render();
-
-
-  var chart2 = new CanvasJS.Chart("chartContainer2", {
-    animationEnabled: false,  
-    title:{
-      text: "PMW level"
-    },
-    axisY: {
-      title: "PMW level",
-      valueFormatString: "#0,,.",
-      suffix: "",
-    },
-    data: [{
-      name: "PMW",
-      yValueFormatString: "#,### Units",
-      xValueFormatString: "####",
-      type: "spline",
-      dataPoints: [ //$
-      ]
-    }]
-  });
-  chart2.render();
-  }
-</script>
+  <h1 align='center' style='color: red; font-size: 9pc;'><u>Motion Ownage</u></h1>
+  <h3 style='color: red; font-size: 2pc;'>Graphs:</h3>
 </head>
 <body>
-  <div align="center" id="chartContainer" style="height: 370px; width: 97%; margin: 2pc"></div>
-  <div id="chartContainer2" style="height: 370px; width: 97%; margin: 2pc;"></div>
-  <script src="https://canvasjs.com/assets/script/canvasjs.min.js"> </script>
-
-  <footer style="font-size: 2pc;">
+<svg width='950' height='400' xmlns='http://www.w3.org/2000/svg' style='background:white;'>
+  <g transform='translate(170,200) scale(1.5)'>
+    <!-- Now Draw the main X and Y axis -->
+    <g style='stroke-width:2; stroke:black'>
+      <!-- X Axis -->
+      <path d='M 0 0 L 500 0 Z'/>
+      <!-- Y Axis -->
+      <path d='M 0 -120 L 0 120 Z'/>
+    </g>
+    <g style='fill:none; stroke:#B0B0B0; stroke-width:1; stroke-dasharray:2 4;text-anchor:end; font-size:30'>
+      <text style='fill:black; stroke:none' x='-1' y='120' >-10000</text>
+      <text style='fill:black; stroke:none' x='-1' y='0' >0</text>
+      <text style='fill:black; stroke:none' x='-1' y='-100' >10000</text>
+      <g style='text-anchor:middle'>
+	<text style='fill:black; stroke:none' x='100' y='20' >100</text>
+	<text style='fill:black; stroke:none' x='200' y='20' >200</text>
+	<text style='fill:black; stroke:none' x='300' y='20' >300</text>
+	<text style='fill:black; stroke:none' x='400' y='20' >400</text>
+      </g>
+    </g>
+    <polyline
+	      points='0,     0
+		      10,    20
+		      20,    39
+		      30,    56
+		      40,    72
+		      50,    84
+		      60,    93
+		      70,    99
+		      80,   -150
+		      90,    97
+		      100,   91
+		      110,   81
+		      120,   68
+		      130,   52
+		      140,   33
+		      150,   14
+		      160,   -6
+		      170,  -26
+		      180,  -44
+		      190,  -61
+		      200,  -76
+		      210,  -87
+		      220,  -95
+		      230,  -99
+		      240, -100
+		      250,  -96
+		      260,  -88
+		      270,  -77
+		      280,  -63
+		      290,  -46
+		      300,  -28
+		      310,   -8
+		      320,   12'
+          style='stroke:red; stroke-width: 1; fill : none;'/>
+    <polyline
+	      points=' 0,     0
+		      10,    2
+		      20,    3
+		      30,    5
+		      40,    7
+		      50,    8
+		      60,    9
+		      70,    9
+		      80,   10
+		      90,    9
+		      100,   9
+		      110,   8
+		      120,   6
+		      130,   5
+		      140,   3
+		      150,   1
+		      160,   -6
+		      170,  -2
+		      180,  -4
+		      190,  -6
+		      200,  -7
+		      210,  -8
+		      220,  -9
+		      230,  -9
+		      240, -10
+		      250,  -9
+		      260,  -8
+		      270,  -7
+		      280,  -6
+		      290,  -4
+		      300,  -2
+		      310,  -2
+		      320,   1'
+	      style='stroke:green; stroke-width: 1; fill : none;'/>
+  </g>
+</svg>
+<svg width='900' height='400' xmlns='http://www.w3.org/2000/svg' style='background:white;'>
+    <g transform='translate(120,200) scale(1.5)'>
+    <!-- Now Draw the main X and Y axis -->
+    <g style='stroke-width:2; stroke:black'>
+      <!-- X Axis -->
+      <path d='M 0 0 L 500 0 Z'/>
+      <!-- Y Axis -->
+      <path d='M 0 -100 L 0 100 Z'/>
+    </g>
+    <g style='fill:none; stroke:#B0B0B0; stroke-width:1; stroke-dasharray:2 4;text-anchor:end; font-size:30'>
+      <text style='fill:black; stroke:none' x='-1' y='100' >-100</text>
+      <text style='fill:black; stroke:none' x='-1' y='0' >0</text>
+      <text style='fill:black; stroke:none' x='-1' y='-100' >100</text>
+      <g style='text-anchor:middle'>
+	<text style='fill:black; stroke:none' x='100' y='20' >100</text>
+	<text style='fill:black; stroke:none' x='200' y='20' >200</text>
+	<text style='fill:black; stroke:none' x='300' y='20' >300</text>
+	<text style='fill:black; stroke:none' x='400' y='20' >400</text>
+      </g>
+    </g>
+    <polyline
+	      points=' 0,     0
+		      10,    20
+		      20,    39
+		      30,    56
+		      40,    72
+		      50,    84
+		      60,    93
+		      70,    99
+		      80,   100
+		      90,    97
+		      100,   91
+		      110,   81
+		      120,   68
+		      130,   52
+		      140,   33
+		      150,   14
+		      160,   -6
+		      170,  -26
+		      180,  -44
+		      190,  -61
+		      200,  -76
+		      210,  -87
+		      220,  -95
+		      230,  -99
+		      240, -100
+		      250,  -96
+		      260,  -88
+		      270,  -77
+		      280,  -63
+		      290,  -46
+		      300,  -28
+		      310,   -8
+              320,   12
+              500,   25'
+	      style='stroke:red; stroke-width: 1; fill : none;'/>
+  </g>
+</svg>
+  <footer style='font-size: 1pc;'>
     By Tomas Kasl and Zdenek Syrovy<br>
     FEL CTU 2020
-</footer>
+  </footer>
 </body>
 </html>
-
