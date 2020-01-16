@@ -22,7 +22,6 @@ void www()
   serverAddr.sin_port = htons(SERVER_PORT);
   serverAddr.sin_addr.s_addr = htonl(INADDR_ANY);
   
-  
   s=socket(AF_INET, SOCK_STREAM, 0);
   if (s<0)
   {
@@ -52,8 +51,6 @@ void www()
 
   while(1)
   {
-
-  	nanosleep(&tim , &tim2);
     /* accept waits for somebody to connect and the returns a new file descriptor */
     if ((newFd = accept(s, (struct sockaddr *) &clientAddr, &sockAddrSize)) == ERROR)
     {
@@ -71,23 +68,21 @@ void serve(int fd) {
 	printf("Serving a HTML page\n");
     FILE *tunnel = fdopen(fd, "w");
     fprintf(tunnel, "HTTP/1.0 200 OK\r\n\r\n");
-    fprintf(tunnel, "<html style='background-color: yellowgreen;'>\n<head>\n  <h1 align='center' style='color: red; font-size: 9pc;'><u>Motion Ownage</u></h1>\n  <h3 style='color: red; font-size: 3pc;'>Graphs:</h3>\n</head>\n<body onload='setTimeout(function(){location.reload()}, 100);'>\n<svg width='950' height='400' xmlns='http://www.w3.org/2000/svg' style='background:white;'>\n  <g transform='translate(170,200) scale(1.5)'>\n    <!-- Now Draw the main X and Y axis -->\n    <g style='stroke-width:2; stroke:black'>\n      <!-- X Axis -->\n      <path d='M 0 0 L 500 0 Z'/>\n      <!-- Y Axis -->\n      <path d='M 0 -120 L 0 120 Z'/>\n    </g>\n    <g style='fill:none; stroke:#B0B0B0; stroke-width:1; stroke-dasharray:2 4;text-anchor:end; font-size:30'>\n      <text style='fill:black; stroke:none' x='-1' y='120' >-</text>\n      <text style='fill:black; stroke:none' x='-1' y='0' >0</text>\n      <text style='fill:black; stroke:none' x='-5' y='-100' >+</text>\n      <g style='text-anchor:middle'>\n	<text style='fill:black; stroke:none' x='100' y='22' >-400</text>\n	<text style='fill:black; stroke:none' x='200' y='22' >-300</text>\n	<text style='fill:black; stroke:none' x='300' y='22' >-200</text>\n	<text style='fill:black; stroke:none' x='400' y='22' >-100</text>\n<text style='fill:green; stroke:none' x='120' y='125' >Actual position</text>\n<text style='fill:red; stroke:none' x='380' y='125' >Desired position</text>      </g>\n    </g>\n    <polyline\n	      points='",maxval);
+    fprintf(tunnel, "<?xml version='1.0'?>\n<!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.0//EN' 'http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd'>\n<html style='background-color: yellowgreen;'>\n<head>\n  <h1 align='center' style='color: red; font-size: 9pc;'><u>Motion Ownage</u></h1>\n  <h3 style='color: red; font-size: 2pc;'>Graphs:</h3>\n</head>\n<body>\n<svg width='950' height='400' xmlns='http://www.w3.org/2000/svg' style='background:white;'>\n  <g transform='translate(170,200) scale(1.5)'>\n    <!-- Now Draw the main X and Y axis -->\n    <g style='stroke-width:2; stroke:black'>\n      <!-- X Axis -->\n      <path d='M 0 0 L 500 0 Z'/>\n      <!-- Y Axis -->\n      <path d='M 0 -120 L 0 120 Z'/>\n    </g>\n    <g style='fill:none; stroke:#B0B0B0; stroke-width:1; stroke-dasharray:2 4;text-anchor:end; font-size:30'>\n      <text style='fill:black; stroke:none' x='-1' y='120' >-3000</text>\n      <text style='fill:black; stroke:none' x='-1' y='0' >0</text>\n      <text style='fill:black; stroke:none' x='-1' y='-100' >3000</text>\n      <g style='text-anchor:middle'>\n	<text style='fill:black; stroke:none' x='100' y='22' >-400</text>\n	<text style='fill:black; stroke:none' x='200' y='22' >-300</text>\n	<text style='fill:black; stroke:none' x='300' y='22' >-200</text>\n	<text style='fill:black; stroke:none' x='400' y='22' >-100</text>\n<text style='fill:green; stroke:none' x='120' y='125' >Actual position</text>\n<text style='fill:red; stroke:none' x='420' y='125' >Desired position</text>      </g>\n    </g>\n    <polyline\n	      points='");
     int i;
-    semTake(sem, WAIT_FOREVER);
-    int moment=timemark; if(moment>499){moment=499;}
+    int moment=timemark;
     for(i=0; i<moment; i++) {
-        fprintf(tunnel, " %d, %d\n", i, -DesPosHistory[i]/(maxval/100));
+        fprintf(tunnel, " %d, %d\n", i, PosHistory[i]/30);
     };
-    fprintf(tunnel, "'\n          style='stroke:red; stroke-width: 1; fill : none;'/>\n    <polyline\n	      points='");
+    fprintf(tunnel, "'\n          style='stroke:red; stroke-width: 2; fill : none;'/>\n    <polyline\n	      points='");
     for(i=0; i<moment; i++)  {
-        fprintf(tunnel, " %d, %d\n", i, -PosHistory[i]/(maxval/100));
+        fprintf(tunnel, " %d, %d\n", i, DesPosHistory[i]/30);
     };
-    fprintf(tunnel, "'\n	      style='stroke:green; stroke-width: 1; fill : none;'/>\n  </g>\n</svg>\n<svg width='900' height='400' xmlns='http://www.w3.org/2000/svg' style='background:white;'>\n    <g transform='translate(120,200) scale(1.5)'>\n    <!-- Now Draw the main X and Y axis -->\n    <g style='stroke-width:2; stroke:black'>\n      <!-- X Axis -->\n      <path d='M 0 0 L 500 0 Z'/>\n      <!-- Y Axis -->\n      <path d='M 0 -100 L 0 100 Z'/>\n    </g>\n    <g style='fill:none; stroke:#B0B0B0; stroke-width:1; stroke-dasharray:2 4;text-anchor:end; font-size:30'>\n      <text style='fill:black; stroke:none' x='-1' y='100' >-100</text>\n      <text style='fill:black; stroke:none' x='-1' y='0' >0</text>\n      <text style='fill:black; stroke:none' x='-1' y='-100' >100</text>\n      <g style='text-anchor:middle'>\n	<text style='fill:black; stroke:none' x='100' y='22' >-400</text>\n	<text style='fill:black; stroke:none' x='200' y='22' >-300</text>\n	<text style='fill:black; stroke:none' x='300' y='22' >-200</text>\n	<text style='fill:black; stroke:none' x='400' y='22' >-100</text> \n <text style='fill:blue; stroke:none' x='250' y='125' >PWM percentage</text>\n      </g>\n    </g>\n    <polyline\n	      points='");
+    fprintf(tunnel, "'\n	      style='stroke:green; stroke-width: 2; fill : none;'/>\n  </g>\n</svg>\n<svg width='900' height='400' xmlns='http://www.w3.org/2000/svg' style='background:white;'>\n    <g transform='translate(120,200) scale(1.5)'>\n    <!-- Now Draw the main X and Y axis -->\n    <g style='stroke-width:2; stroke:black'>\n      <!-- X Axis -->\n      <path d='M 0 0 L 500 0 Z'/>\n      <!-- Y Axis -->\n      <path d='M 0 -100 L 0 100 Z'/>\n    </g>\n    <g style='fill:none; stroke:#B0B0B0; stroke-width:1; stroke-dasharray:2 4;text-anchor:end; font-size:30'>\n      <text style='fill:black; stroke:none' x='-1' y='100' >-100</text>\n      <text style='fill:black; stroke:none' x='-1' y='0' >0</text>\n      <text style='fill:black; stroke:none' x='-1' y='-100' >100</text>\n      <g style='text-anchor:middle'>\n	<text style='fill:black; stroke:none' x='100' y='22' >-400</text>\n	<text style='fill:black; stroke:none' x='200' y='22' >-300</text>\n	<text style='fill:black; stroke:none' x='300' y='22' >-200</text>\n	<text style='fill:black; stroke:none' x='400' y='22' >-100</text> \n <text style='fill:blue; stroke:none' x='250' y='125' >PWM percentage</text>\n      </g>\n    </g>\n    <polyline\n	      points='");
     for(i=0; i<moment; i++) {
-	    fprintf(tunnel, " %d, %d\n", i, -PWMHistory[i]);
+    	  fprintf(tunnel, " %d, %d\n", i, PWMHistory[i]);
     };
-    semGive(sem);
-    fprintf(tunnel, "'\n	      style='stroke:blue; stroke-width: 2; fill : none;'/>\n  </g>\n</svg>\n  <footer style='font-size: 2pc;'>\n    By Tomas Kasl and Zdenek Syrovy<br>\n    FEL CTU 2020\n  </footer>\n</body>\n</html>");
+    fprintf(tunnel, "'\n	      style='stroke:blue; stroke-width: 2; fill : none;'/>\n  </g>\n</svg>\n  <footer style='font-size: 1pc;'>\n    By Tomas Kasl and Zdenek Syrovy<br>\n    FEL CTU 2020\n  </footer>\n</body>\n</html>");
     printf("serving done\n");
     fclose(tunnel);
 }
@@ -95,19 +90,13 @@ void serve(int fd) {
 * init all necessary adresses socket etc. to be able to receive packets, prepares memory for graphs data
 */
 void connectionListenerInit(){
-	sem = semCCreate(SEM_Q_FIFO, 1);
-    PosHistory = malloc(1000*sizeof(short));
-    PosHistorySWAP = malloc(1000*sizeof(short));
-    DesPosHistory = malloc(1000*sizeof(short));
-    DesPosHistorySWAP = malloc(1000*sizeof(short));
-    PWMHistory = malloc(1000*sizeof(short));
-    PWMHistorySWAP = malloc(1000*sizeof(short));
-    tmpptr = malloc(1000*sizeof(short));
+    PosHistory = malloc(2000*sizeof(short));
+    PosHistorySWAP = malloc(2000*sizeof(short));
+    DesPosHistory = malloc(2000*sizeof(short));
+    DesPosHistorySWAP = malloc(2000*sizeof(short));
+    PWMHistory = malloc(2000*sizeof(short));
+    PWMHistorySWAP = malloc(2000*sizeof(short));
 
-	tim.tv_sec  = 0;
-	tim.tv_nsec = 1L;
-	maxval = 1000;
-    
     if ((sockd = socket(AF_INET, SOCK_DGRAM, 0)) == -1) {
         printf("Socket creation error\n");
         return;
@@ -144,7 +133,6 @@ void connectionListener(){
     while(!FINISHED){
         status = recvfrom(sockd,buffer,11,0,(struct sockaddr*)&src,&srclen);
         if(status < 0){//timed-out
-        	nanosleep(&tim , &tim2);
             continue;
         }
         if (buffer[0] == 'P' && buffer[1] == 'W' && buffer[2] == 'N' && buffer[3] == 'S' && buffer[4] == 'T' && buffer[5] == 'N') {
@@ -152,16 +140,6 @@ void connectionListener(){
             /**
              * save the measured data into data containers used for plotting
             */
-            //printf("timemark je %d\n", timemark);
-            if(desiredPosition > 0) {
-            	if(maxval < desiredPosition) {
-            		maxval = desiredPosition;
-            	}
-            } else {
-            	if(maxval < -desiredPosition) {
-            		maxval = -desiredPosition;
-            	}
-            }
             PosHistory[timemark] = position;
             DesPosHistory[timemark] = desiredPosition;
             //left or right
@@ -170,19 +148,17 @@ void connectionListener(){
             else	
                 PWMHistory[timemark] = speed;
             
-            if(timemark > 249){
-                PosHistorySWAP[timemark-250] = position;
-                DesPosHistorySWAP[timemark-250] = desiredPosition;
+            if(timemark > 999){
+                PosHistorySWAP[timemark-1000] = position;
+                DesPosHistorySWAP[timemark-1000] = desiredPosition;
                 if (direction > 1)
-                	PWMHistorySWAP[timemark-250] = -speed;
+                	PWMHistorySWAP[timemark-1000] = -speed;
                 else
-                	PWMHistorySWAP[timemark-250] = speed; 
+                	PWMHistorySWAP[timemark-1000] = speed; 
         	}  		
-            if(timemark == 499) { //we got to the end of the container, we need to swap them
-              maxval = 1000;
-              semTake(sem, WAIT_FOREVER);
-              timemark = 249;
-              tmpptr = PosHistory;
+            if(timemark == 1999) { //we got to the end of the container, we need to swap them
+              timemark = 999;
+              short *tmpptr = PosHistory;
               PosHistory = PosHistorySWAP;
               PosHistorySWAP = tmpptr;
               tmpptr = DesPosHistory;
@@ -191,7 +167,6 @@ void connectionListener(){
               tmpptr = PWMHistory;
               PWMHistory = PWMHistorySWAP;
               PWMHistorySWAP = tmpptr;
-              semGive(sem);
             }
             timemark++;
         }

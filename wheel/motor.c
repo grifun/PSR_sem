@@ -6,44 +6,6 @@
  * interrupt handler, checkes which way engine rotated and sets global position accordingly.
  * 
  */
-/*void motorWatcher() {
-        a = (MOTOR_SR & BIT(MOTOR_SR_IRC_A_MON)) != 0;
-        b = (MOTOR_SR & BIT(MOTOR_SR_IRC_B_MON)) != 0;
-
-        if(a == prev_a) {
-        	if(a == 1){
-        		if(b == 1){
-        			position++;
-        		} else{
-        			position--;
-        		}
-        	} else{
-        		if(b == 0){
-        			position++;
-        		} else{
-        			position--;
-        		}
-        	}
-        }else{
-        	if(b == 1){
-				if(a == 0){
-					position++;
-				} else{
-					position--;
-				}
-			} else{
-				if(a == 1){
-					position++;
-				} else{
-					position--;
-				}
-			}
-        }
-        prev_a = a;
-        prev_b = b;
-        irq_count++;
-        GPIO_INT_STATUS = MOTOR_IRQ_PIN; /* clear the interrupt 
-}*/
  static const int table[16] = {
           [TRANSITION(0,1)] = +1,
           [TRANSITION(1,3)] = +1,
